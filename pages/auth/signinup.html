@@ -1,0 +1,54 @@
+<div class="hero bg-primary p-3 pb-3">
+    <div class="text-center">
+         <h1> Inscription</h1>  
+    </div>
+  </div>
+ 
+<div class="container">
+    <form>
+        <div class="pseudo">
+            <label for="PseudoInput" class="form-label">Pseudo</label>
+            <input type="text" class="form-control" id="PseudoInput" placeholder="Votre pseudo" name="Pseudo"> 
+            <div class="invalid-feedback">
+                Le Nom est requis
+            </div> 
+        </div>
+        <div class="prenom">
+            <label for="PrenomInput" class="form-label">Prénom</label>
+            <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom" name="Prenom"> 
+            <div class="invalid-feedback">
+                Le Prénom est requis
+            </div> 
+        </div>
+        <div class="email">
+          <label for="EmailInput" class="form-label">Email</label>
+          <input type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr" name="Email"> 
+          <div class="invalid-feedback">
+            Le  mail n'est pas au bon format
+        </div> 
+        </div>
+        <div class="password">
+          <label for="PasswordInput" class="form-label">Mot de passe</label>
+          <input type="password" class="form-control" id="PasswordInput" name="Password">
+        <div class="invalid-feedback">
+            Le mot de passe n'est pas conforme : Au moins 8 caractères,comprenant au moins une majuscle,une minuscle,un chiffre et un caractères spéciale
+        </div> 
+        <div class="valid-feedback">
+            Votre mot de passe est conforme
+        </div>  
+        </div>
+        <div class="password-confirm">
+            <label for="ValidatePasswordInput" class="form-label">Confirmez votre mot de passe</label>
+            <input type="password" class="form-control" id="ValidatePasswordInput" name="PasswordConfirm">
+            <div class="invalid-feedback">
+                La confirmation n'est pas identique au mot de passe
+            </div>     
+          </div>
+        <div class="btn-signinup ">
+            <button type="submit" class="btn btn-primary" id="btn-validation-inscription">Inscription</button>
+        </div>
+    </form>
+    <div class="for-signin">
+        <a href="/signin">Vous avez déjà un compte ? Connectez-vous ici !</a>
+    </div>
+</div>

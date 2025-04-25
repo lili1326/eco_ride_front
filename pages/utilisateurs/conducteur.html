@@ -1,0 +1,79 @@
+<div class="hero bg-primary p-3 pb-3">
+    <div class="text-center">
+         <h1> Mon espace conducteur</h1>  
+    </div>
+  </div>
+  <div class="container-row">
+    <div class="form-wrapper">
+      <h3>Véhicules</h3> 
+      <form id="form-conducteur">
+        <label for="selectVehicule">Sélectionner un véhicule :</label>
+        <select id="selectVehicule">
+          <option disabled selected value="">-- Choisir un véhicule --</option>
+        </select>
+        
+        <div id="vehicules-container">
+          <!-- Formulaires ou récapitulatifs ici -->
+        </div>
+        <button type="button" id="btn-ajouter-vehicule">+ Ajouter un véhicule</button>
+      </form>
+    </div>
+ 
+    <div class="form-wrapper">
+      <h3>Préférences</h3>
+      <form id="preferences-form">
+        <label>Fumeur:
+          <select name="fumeur">
+            <option value="oui">Oui</option>
+            <option value="non">Non</option>
+          </select>
+        </label>
+        <label>Animaux:
+          <select name="animaux">
+            <option value="oui">Oui</option>
+            <option value="non">Non</option>
+          </select>
+        </label>
+        <label>Musique:
+          <input type="text" name="musique">
+        </label>
+        <label>Divers:
+          <textarea name="divers"></textarea>
+        </label>
+        <button type="submit" id="btn-regiter-preference">Enregistrer</button>
+      </form>
+    </div>
+    <div class="form-wrapper">
+        <h3>Proposer un trajet</h3>
+        <form id="form-trajet">
+          <label>Départ:
+            <input type="text" name="depart" required>
+          </label>
+          <label>Arrivée:
+            <input type="text" name="arrivee" required>
+          </label>
+          <label>Nombre de places disponibles:
+            <input type="number" name="places" min="1" max="9" required>
+          </label>
+          <label>Prix (€):
+            <input type="number" name="prix" min="0" step="0.01" required>
+          </label>
+          <label>Date:
+            <input type="date" name="date" required>
+          </label>
+          <label>Horaire (format 00h00/00h00):
+            <input type="text" name="horaire" placeholder="08h00/10h30"  pattern="^([01][0-9]|2[0-3])h[0-5][0-9]/([01][0-9]|2[0-3])h[0-5][0-9]$"
+            required
+            oninvalid="this.setCustomValidity('Format attendu : 00h00/00h00')"
+            oninput="this.setCustomValidity('')">
+          </label>
+          <label>Énergie utilisée:
+            <input type="text" name="energie" required>
+          </label>
+          <button type="submit" id="btn-trajetEnLigne">Mettre en ligne</button>
+        </form>
+      </div>    
+  </div>
+  <!-- Zone d'affichage du récapitulatif -->
+<div id="recap-trajet" style="margin-top: 20px; font-family: sans-serif;"></div>
+  

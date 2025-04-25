@@ -1,0 +1,141 @@
+<div class="hero bg-primary p-3 pb-3">
+  <div class="text-center">
+       <h1>Le covoiturage c’est, Partager la route, partager les coût </h1>  
+  </div>
+</div>
+
+<div class="search-container  bg-bacground  gap-5">
+    <div class="input-group">
+        <i class="bi bi-geo-alt">
+        </i><input type="text" id="depart" placeholder="Départ">    
+    </div>
+    <div class="input-group">
+        <i class="bi bi-geo-alt-fill"></i>
+        <input type="text" id="arrivee" placeholder="Arrivée">
+    </div>
+    <div class="input-group">
+        <i class="bi bi-calendar-date"></i>
+        <input type="date">
+    </div>
+</div>
+<div class="search-button text-center pt-2 p-3">
+  <button>Recherche</button>
+</div> 
+
+<div class="filter-container">
+    <div class="dropdown ">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Note conducteur:
+          </a>  
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Pas encore de note</a></li>
+            <li><a class="dropdown-item" href="#">0/5</a></li>
+            <li><a class="dropdown-item" href="#">1/5</a></li>
+            <li><a class="dropdown-item" href="#">2/5</a></li>
+            <li><a class="dropdown-item" href="#">3/5</a></li>
+            <li><a class="dropdown-item" href="#">4/5</a></li>
+            <li><a class="dropdown-item" href="#">5/5</a></li>
+          </ul>
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Prix Maximun:
+        </a>  
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">10.00€</a></li>
+          <li><a class="dropdown-item" href="#">15.00€</a></li>
+          <li><a class="dropdown-item" href="#">20.00€</a></li>
+          <li><a class="dropdown-item" href="#">30.00€</a></li>
+          <li><a class="dropdown-item" href="#">40.00€</a></li>
+        </ul>
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Durée Maximun:
+          </a>  
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">00:15 min</a></li>
+            <li><a class="dropdown-item" href="#">00:30 min</a></li>
+            <li><a class="dropdown-item" href="#">45:00 min</a></li>
+            <li><a class="dropdown-item" href="#">01:00 min</a></li>
+            <li><a class="dropdown-item" href="#">01:30 min</a></li>
+          </ul>
+          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Type de véhicule:
+          </a>  
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Electrique</a></li>
+            <li><a class="dropdown-item" href="#">Hybride</a></li>
+            <li><a class="dropdown-item" href="#">Gazoil</a></li>
+            <li><a class="dropdown-item" href="#">Essence</a></li>
+            <li><a class="dropdown-item" href="#">GPL</a></li>
+          </ul>  
+           
+          <button class="search-button-filter">Recherche</button>
+  </div> 
+</div>
+
+<section class="listCovoiturage">
+<div class="containerList">
+  <div class="card">
+      <div class="profile">
+      <h3>PSEUDO</h3>
+      <img src="/assets/images/avatar.png" alt="Votre profile" width="70px">
+      </div>
+      <p>Départ ----> Arrivée</p>
+      <p>Place: 2  </p>
+      <p>Prix: 10.00€</p>
+      <p>Date:</p>
+      <p>Horaire: 08h00/08h30</p>
+      <p>Véhicule électrique</p>
+      <button onclick="route(event)" data-url="/account" data-protected="true">Participer</button>    
+  </div>
+  <div class="cardCarPreference">
+    <p class="car">
+    <span>Véhicule: </span><br> 
+      Marque: <br> 
+     Modèle:  <br> 
+    Energie utilisée: <br></p>
+    <p class="preference">
+        <span>Préférences: </span><br> 
+        Fumeur: <br> 
+        Animaux:  <br> 
+        Music: <br>
+        Divers: <br><br><br><br><br><br></p>
+  </div>
+  <div class="cardAvis">
+    <p class="preference">
+        <span>Avis: </span><br> 
+        Date:_____________ Note: <br> 
+        Trajet: <br>
+        Commentaire: <br><br>
+        Passager: <br>
+    </p>
+    <p class="preference">
+         <span>Avis: </span><br> 
+         Date:_____________ Note: <br> 
+        Trajet: <br>
+         Commentaire: <br><br>
+        Passager: <br>
+    </p>    
+    <p class="preference">
+        <span>Avis: </span><br> 
+        Date:_____________ Note: <br> 
+       Trajet: <br>
+        Commentaire: <br><br>
+       Passager: <br>
+   </p>    
+   <p class="preference">
+    <span>Avis: </span><br> 
+    Date:_____________ Note: <br> 
+   Trajet: <br>
+    Commentaire: <br><br>
+   Passager: <br>
+</p>    
+<p class="preference">
+  <span>Avis: </span><br> 
+  Date:_____________ Note: <br> 
+ Trajet: <br>
+  Commentaire: <br><br>
+ Passager: <br>
+</p>    
+  </div>
+  </div>
+</div>
+</section>
