@@ -1,0 +1,21 @@
+//fichier non compliler
+ // Custom.scss
+// Option A: Include all of Bootstrap
+
+// Include any default variable overrides here (though functions won't be available)
+
+$primary: #9CAF74;
+$secondary: #D0D3A5;
+$tertiary: #D88C00;
+$dark: #3E3E3E;
+$background:#E5E9DF;
+
+
+
+$font-family-sans-serif: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !default;
+$font-family-serif: Georgia, "Times New Roman", Times, serif !default;
+
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// Then add additional custom code here

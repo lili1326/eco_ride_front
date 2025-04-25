@@ -1,0 +1,482 @@
+@import url(../../node_modules/bootstrap-icons/font/bootstrap-icons.css);
+@import'custom';
+
+ //FONT
+ a{
+    font-family: $font-family-serif;
+    font-weight: 300;
+    font-style: oblique;
+    color: $background;
+ }
+
+ h1{
+    font-family: $font-family-sans-serif;
+    font-weight: 700;
+    font-style: italic;
+ }
+ h3{
+    font-family: $font-family-sans-serif;
+ }
+ p{
+    font-family: $font-family-serif; 
+    
+ }
+ .button{
+    font-family: $font-family-sans-serif; 
+ }
+
+body{
+    background-color:$background;
+}
+
+ //HTML
+
+html{
+    position: relative;
+    min-height: 100%;
+}
+
+main{
+    margin-bottom: 165px;
+}
+ //HOME-NAVBAR
+ 
+.nav-link{
+    color: $background;
+}
+.nav-link:hover{
+    color: $tertiary;
+}
+.nav-item{
+    padding-right: 50px;
+}
+ 
+//HOME-MENU BURGER
+.navbar-toggler{
+    border-color: $background; // Bordure blanche du bouton
+    color: $background;
+    margin-inline-start: 20%;
+}
+ 
+.container-fluid ,.img{
+   padding-left: 40px;
+}
+
+//HOME-container-trajet-date
+ 
+.search-container{
+    display: flex;
+    flex-direction: row;  
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+
+    @media (max-width: 767px) { /* En dessous de 768px (Mobile) */
+        flex-direction: column; /* Passe en colonne pour mobile */
+        justify-content: space-between;
+    }
+}
+.search-container{
+    margin-top: 30px;
+}
+
+.input-group {
+    display: flex;
+    align-items:center;
+    align-content: center;
+    background-color:$secondary;  
+    padding: 12px 15px;
+    border-radius: 27px;
+    width: 100%;
+    max-width: 360px;
+    height:50px;
+    border: 1px solid #4F4F4F;
+    transition: 0.3s;
+
+    i {
+        color:red;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+
+    input {
+        border: none;
+       background: transparent;
+       max-width: 150px;
+    }
+}
+
+.search-button button:hover {
+    background-color:  $primary;
+}
+
+
+//HOME-CONTAINER-TEXT-IMAG
+
+.container-text-imag-1, .container-text-imag-2{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: auto;
+    padding: 24px;
+   margin-left: 150px;
+   margin-right: 150px;
+    
+}
+.container-text-left, .container-imag-right,.container-text-right, .container-imag-left{
+    flex: 1 1;
+}
+
+.container-imag-right,.container-imag-left{
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+}
+
+.container-text-left,.container-text-right{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-text-imag-1{
+    background-color: $primary;
+}
+ .text-left,h3{
+    justify-content: center;    
+}
+
+.imag-left{
+    width:400px ;
+}
+
+ .container-text-imag-1,.container-text-imag-2 
+ {
+    @media (max-width: 767px) { /* En dessous de 768px (Mobile) */
+        flex-direction: column; /* Passe en colonne pour mobile */
+        justify-content: space-between;  
+        padding: 5px;
+         margin-bottom: 10px;
+         padding-top: 20px;
+         padding-bottom: 20px;
+         margin: auto;
+    }
+}
+
+
+//COVOITURAGE -FILTRE
+.search-button button,.search-button-filter  {
+    display: inline-block;
+    margin: 0 auto;
+    background-color:$tertiary;
+    color: black;
+    border: none;
+    padding: 10px 25px;
+    font-weight: bold;
+    border-radius: 19px;
+    width: 100%;
+    max-width: 380px;
+    cursor: pointer;
+}
+ 
+.btn-secondary.dropdown-toggle, .button .search-button-filter {
+    height: 50px; /* Change la hauteur selon ton besoin */
+    line-height: 50px; /* Centre le texte verticalement */
+    padding: 0 15px; /* Ajuste l'espacement intérieur */
+    width: 100%; /* Largeur selon le texte */   
+}
+  
+ .filter-container ,.dropdown ,.search-button-filter button {
+    display: flex;
+    flex-direction: row;  
+    justify-content:space-around;
+    align-items: center;
+    gap:10px;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    @media (max-width: 767px) { /* En dessous de 768px (Mobile) */
+        flex-direction: column; /* Passe en colonne pour mobile */
+        justify-content: space-between;  
+    }
+} 
+
+// PAGE CONVOITURAGE -liste  card-covoiturage
+
+.listCovoiturage {
+    font-family: Arial, sans-serif;
+    background-color: $primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding-top: 40px;
+}
+
+.containerList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 40px;
+    margin-bottom: 30px;
+    padding-top: 40px;
+}
+
+//CONVOITURAGE-VUE DETAIL
+
+.card{
+    text-align: center;
+}
+
+//CARD  LES TROIS
+.card, .cardCarPreference ,.cardAvis{
+    background: $secondary;
+    padding: 20px 0;
+    border-radius: 10px;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
+
+// CARD TRAJET PROPOSER
+.profile{
+    display: flex;
+    flex-direction: row;
+     justify-content: space-around;
+     align-items: center;
+     margin-bottom: 10px;
+}
+
+//CARD PREFERENCES
+.cardCarPreference{
+    height: 500px;
+}
+.cardCarPreference .car ,.preference{
+  padding-left: 20px;
+  line-height: 2;
+}
+ 
+// CARD AVIS
+.cardAvis {
+    max-height: 500px; /* Hauteur max avant scroll */
+    overflow-y: auto; /* Ajoute un scroll vertical */
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%; /* Largeur adaptative */
+    max-width: 400px; /* Empêche qu'elle devienne trop large */
+    margin: 0 auto; /* Centre la div */
+
+  /* Scroll personnalisé pour Firefox */
+  scrollbar-width: thin; /* Taille de la barre */
+  scrollbar-color: $tertiary $tertiary; /* (Couleur de la barre, Couleur du fond) */
+}
+
+
+button {
+    background: $tertiary;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    color:  black;
+    font-weight: bold;
+    width: 50%;
+    margin-left: 80px; 
+    margin-top: 20px;
+}
+
+p{
+    background-color: $background;
+}
+
+.profileAccount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem; // espace entre input et image ou 40px
+    flex-wrap: wrap; // permet de passer en colonne sur petits écrans
+    padding: 1rem;
+}
+
+@media (max-width: 600px) {
+    .container {
+        grid-template-columns: 1fr;
+        width: 90%;
+    }
+}
+ 
+// CONNECTION / SIGNIN  //INSCRIPTION / SIGNINUP
+.for-signinup, .for-signin {
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    color: $primary;
+  }
+  
+  .for-signinup a , .for-signin a{
+    color: black;
+    text-decoration: underline;
+    display: inline-block;
+  }
+  
+  .btn-signin, .btn-signinup{
+    text-align: center;
+  }
+  
+
+ //ACCOUNT
+
+.form-label{
+    margin-top: 20px;
+    color: $primary;
+    font-size:20px ;
+}
+
+.actionButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem; // espace entre les boutons
+    margin-top: 2rem;
+     
+}
+ 
+button.btn.btn-danger,button.btn.btn-primary,button.btn.btn-tertiary, a.btn.btn-primary {
+    min-width: 220px;
+    border-radius: 8px;
+     margin-inline-start: auto;
+     
+  }  
+  button.btn.btn-tertiary{
+    background-color: $tertiary;
+    
+  }
+
+
+//MON ESPACE
+
+.etatUtilisateur {
+    background-color: $primary;
+    padding: 2rem;
+    margin-top: 25px;
+  
+    .containerEtat {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+  
+    .cardUtilisateur {
+        background-color: $secondary;
+        border-radius: 12px;
+       padding: 2rem 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+         justify-content: center;  // centre verticalement
+   
+        h3 {
+          font-size: 1.3rem;
+          margin-bottom: 1.5rem;
+          color: #1f1f1f;
+          font-family: $font-family-sans-serif;
+        }
+      }
+    }
+  
+  .btn-acces{
+    width: 100%;
+  }
+
+  //UTILISATEUR CONDUCTEUR
+  .container-row {
+    display: flex;
+    flex-direction: column; /* empile les formulaires */
+    gap: 30px;
+    background-color: $background;
+    padding: 40px;
+    border-radius: 10px;
+  }
+  
+  /* Formulaire à 100% de la largeur de l'écran */
+  .form-wrapper {
+    width: 100%;
+  }
+  
+  /* Enlève la largeur fixe ici (c'est elle qui t’empêche d’avoir toute la largeur) */
+  .container-row form {
+    background-color: $secondary;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    width: 100%; /*  prend toute la largeur */
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+  }
+  
+  /* Champs côte à côte */
+  .form-wrapper form label {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+  }
+  
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    .form-wrapper form label {
+      flex: 1 1 100%;
+    }
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 6px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid $background;
+    background-color: $background;
+  }
+   
+  
+  
+  /* Bouton bien dimensionné */
+  #btn-ajouter-vehicule ,#btn-trajetEnLigne, #btn-regiter-preference{
+     width: 200px;
+     height: 44px;
+  }
+  #btn-ajouter-vehicule{
+    height: 60px;
+  }
+
+
+//FOOTER
+footer.footer{
+    padding: 15px;
+    position:absolute;
+    bottom: 0;
+    width: 100%;
+}
+.footer a {
+    text-decoration: none;   
+}
+
+.footer a:hover {
+    color: $tertiary; 
+}
