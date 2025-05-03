@@ -2,6 +2,7 @@
 //Implémenter le JS de ma page
 
 const inputPseudo = document.getElementById("PseudoInput");
+const inputNom = document.getElementById("NomInput");
 const inputPreNom = document.getElementById("PrenomInput");
 const inputMail = document.getElementById("EmailInput");
 const inputPassword = document.getElementById("PasswordInput");
@@ -18,13 +19,14 @@ inputValidationPassword.addEventListener("keyup", validateForm);
 //Function permettant de valider tout le formulaire
 function validateForm(){
     const pseudoOk=validateRequired(inputPseudo);// fonction validateRequired
+    const nomOk = validateRequired(inputNom);
     const prenomOk=validateRequired(inputPreNom);
     const mailOk=validateMail(inputMail);
     const passwordOk =validatePassword(inputPassword);
     const passwordConfirmOk=validateConfirmationPassword(inputPassword,inputValidationPassword)
 
     //si les champs ne sont pas valides le btn incription n est pas clikable
-    if (pseudoOk && prenomOk && mailOk && passwordOk && passwordConfirmOk){
+    if (pseudoOk && prenomOk && nomOk && mailOk && passwordOk && passwordConfirmOk) {
         btnValidation.disabled =false;
     }else{
         btnValidation.disabled = true;
@@ -91,3 +93,44 @@ function validateConfirmationPassword(inputPwd, inputConfirmPwd){
         return false;
     }
 }
+
+btnValidation.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const payload = {
+        firstName: inputPreNom.value,
+        lastName:inputNom.value,  
+        pseudo: inputPseudo.value,
+        email: inputMail.value,
+        password: inputPassword.value
+    };
+
+    try {
+        const response = await fetch("http://localhost:8000/api/registration", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.status === 201) {
+            alert("Inscription réussie !"); // Rediriger vers la page de connexion après 1 seconde
+            setTimeout(() => {
+                window.location.href = "/signin";
+            }, 1000);
+            console.log("Token :", result.apiToken);
+            // localStorage.setItem("token", result.apiToken); // facultatif
+            // window.location.href = "/signin"; // redirige vers connexion
+        } else {
+            alert("Erreur lors de l'inscription : " + (result.message || "Inconnue"));
+            console.log(result);
+        }
+    } catch (error) {
+        console.error("Erreur serveur :", error);
+        alert("Erreur de connexion au serveur");
+    }
+});
+

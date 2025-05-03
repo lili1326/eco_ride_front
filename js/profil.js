@@ -25,3 +25,24 @@ if (!input || !avatar) {
     }
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const token = getToken();
+  if (!token) return;
+
+  fetch("http://localhost:8000/api/account/me", {
+      headers: {
+          "X-AUTH-TOKEN": token
+      }
+  })
+  .then(res => res.json())
+  .then(user => {
+      // Pré-remplir les champs input avec les données utilisateur
+      document.getElementById("PseudoInput").value = user.pseudo || "";
+      document.getElementById("PrenomInput").value = user.firstName || "";
+  })
+  .catch(error => {
+      console.error("Erreur lors du chargement des infos utilisateur :", error);
+  });
+});
+
