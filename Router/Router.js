@@ -51,7 +51,8 @@ const LoadContentPage = async () => {
   if (actualRoute.pathJS != "") {
     // Création d'une balise script
     let scriptTag = document.createElement("script");
-    scriptTag.setAttribute("type", "text/javascript");
+    scriptTag.setAttribute("type", "module"); // ✅ obligatoire pour utiliser import/export
+   // scriptTag.setAttribute("type", "text/javascript");
     scriptTag.setAttribute("src", actualRoute.pathJS);
 
     // Ajout de la balise script au corps du document
