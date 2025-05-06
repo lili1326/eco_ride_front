@@ -27,11 +27,17 @@ setTimeout(() => {
 
     console.log("📤 Soumission interceptée");
 
-    const horaire = form.horaire.value.trim(); // ex: 08h00/10h30
-    const [departTime, arriveeTime] = horaire
-      .split("/")
-      .map((h) => h.replace("h", ":") + ":00");
-
+    const horaire = form.horaire.value.trim(); // exemple : "08h00/09h00"
+    let departTime = "", arriveeTime = "";
+    
+    if (/^[0-2][0-9]h[0-5][0-9]\/[0-2][0-9]h[0-5][0-9]$/.test(horaire)) {
+      const [dep, arr] = horaire.split("/");
+      departTime = dep.replace("h", ":") + ":00";   // ex : 08:00:00
+      arriveeTime = arr.replace("h", ":") + ":00";  // ex : 09:00:00
+    } else {
+      alert("❌ Format horaire invalide. Format attendu : 08h00/10h30");
+      return;
+    }
     const data = {
       lieu_depart: form.depart.value,
       lieu_arrivee: form.arrivee.value,
@@ -61,23 +67,38 @@ setTimeout(() => {
         alert("❌ Erreur lors de la création du trajet.");
         return;
       }
-
       alert("✅ Trajet bien enregistré !");
- 
-     const ride = result;
 
-      const recap = document.getElementById("recap-trajet");
-      recap.innerHTML = `
-        <h4>📝 Récapitulatif du trajet proposé :</h4>
-        <ul style="list-style: none; padding-left: 0;">
-          <li><strong>Départ :</strong> ${ride.lieu_depart} à ${ride.heure_depart.slice(0, 5)}</li>
-          <li><strong>Arrivée :</strong> ${ride.lieu_arrivee} à ${ride.heure_arrivee.slice(0, 5)}</li>
-          <li><strong>Date :</strong> ${ride.date_depart}</li>
-          <li><strong>Places disponibles :</strong> ${ride.nb_place}</li>
-          <li><strong>Prix / personne :</strong> ${ride.prix_personne} €</li>
-          <li><strong>Énergie :</strong> ${ride.energie}</li>
-        </ul>
-      `;
+const ride = result;
+
+// Formatage date
+const d = new Date(ride.date_depart);
+const dateFormatee = !isNaN(d.getTime()) ? d.toLocaleDateString("fr-FR") : "Date inconnue";
+
+// Formatage heure
+function extraireHeure(isoString) {
+  const date = new Date(isoString);
+  if (isNaN(date)) return "??:??";
+  return date.toTimeString().slice(0, 5);
+}
+
+const heureDep = extraireHeure(ride.heure_depart);
+const heureArr = extraireHeure(ride.heure_arrivee);
+
+const recap = document.getElementById("recap-trajet");
+recap.innerHTML = `
+  <h4>📝 Récapitulatif du trajet proposé :</h4>
+  <ul style="list-style: none; padding-left: 0;">
+    <li><strong>Départ :</strong> ${ride.lieu_depart} à ${heureDep}</li>
+    <li><strong>Arrivée :</strong> ${ride.lieu_arrivee} à ${heureArr}</li>
+    <li><strong>Date :</strong> ${dateFormatee}</li>
+    <li><strong>Places disponibles :</strong> ${ride.nb_place}</li>
+    <li><strong>Prix / personne :</strong> ${ride.prix_personne} €</li>
+    <li><strong>Énergie :</strong> ${ride.energie}</li>
+  </ul>
+`;
+     
+   
 
       form.reset();
     } catch (err) {
@@ -126,35 +147,41 @@ async function afficherMesTrajets() {
       }
   
       recap.innerHTML = "<h4>📝 Mes trajets</h4>";
-  
+    
+      function extraireHeure(isoString) {
+        const d = new Date(isoString);
+        if (isNaN(d)) return "??:??";
+        return d.toTimeString().slice(0, 5); // "08:00"
+      }
       trajets.forEach(ride => {
         const trajetDiv = document.createElement("div");
-        trajetDiv.setAttribute("data-id", ride.id);
-trajetDiv.setAttribute("data-lieu_depart", ride.lieu_depart);
-trajetDiv.setAttribute("data-lieu_arrivee", ride.lieu_arrivee);
-trajetDiv.setAttribute("data-date_depart", ride.date_depart);
-trajetDiv.setAttribute("data-heure_depart", ride.heure_depart);
-trajetDiv.setAttribute("data-heure_arrivee", ride.heure_arrivee);
-trajetDiv.setAttribute("data-nb_place", ride.nb_place);
-trajetDiv.setAttribute("data-prix_personne", ride.prix_personne);
-trajetDiv.setAttribute("data-energie", ride.energie);
-
+      
+        const d = new Date(ride.date_depart);
+        const dateFormatee = !isNaN(d.getTime()) ? d.toLocaleDateString("fr-FR") : "Date inconnue";
+      
+        const heureDep = extraireHeure(ride.heure_depart);
+        const heureArr = extraireHeure(ride.heure_arrivee);
+      
         trajetDiv.style.border = "1px solid #ccc";
         trajetDiv.style.padding = "10px";
         trajetDiv.style.marginBottom = "10px";
         trajetDiv.style.borderRadius = "8px";
-
+      
         trajetDiv.innerHTML = `
           <p><strong>${ride.lieu_depart}</strong> → <strong>${ride.lieu_arrivee}</strong></p>
-          <p>${ride.date_depart} — ${ride.heure_depart.slice(0, 5)} à ${ride.heure_arrivee.slice(0, 5)}</p>
+          <p>${dateFormatee} — ${heureDep} à ${heureArr}</p>
           <p>${ride.nb_place} places – ${ride.prix_personne} € – ${ride.energie}</p>
           <button class="btn-modifier"> Modifier</button>
           <button class="btn-supprimer"> Supprimer</button>
         `;
-        
-        recap.appendChild(trajetDiv); 
-
+ 
+        recap.appendChild(trajetDiv);
       });
+      
+     
+        
+
+     
   
     } catch (err) {
       console.error("❌ Erreur réseau :", err);
@@ -165,13 +192,13 @@ trajetDiv.setAttribute("data-energie", ride.energie);
   
 
 
-
+      
   afficherMesTrajets();
 
   // Écouteur global pour tous les boutons "Supprimer"
-  
-   
 
+
+  
      document.addEventListener("click", async (e) => {
         if (e.target.classList.contains("btn-supprimer")) {
           const trajetDiv = e.target.closest("div[data-id]");
@@ -204,6 +231,7 @@ trajetDiv.setAttribute("data-energie", ride.energie);
             alert("❌ Erreur réseau.");
           }
         }
+
  //MODIFIER
         if (e.target.classList.contains("btn-modifier")) {
             const trajetDiv = e.target.closest("div[data-id]");
