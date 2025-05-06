@@ -1,30 +1,37 @@
 console.log("✅ covoiturage.js chargé");
-
-setTimeout(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const depart = urlParams.get("depart");
-  const arrivee = urlParams.get("arrivee");
-  const date = urlParams.get("date");
-
-  const departInput = document.getElementById("depart");
-  const arriveeInput = document.getElementById("arrivee");
-  const dateInput = document.getElementById("date");
-  const btnRecherche = document.getElementById("btn-recherche");
-
-  if (departInput && arriveeInput && dateInput && btnRecherche) {
-    if (depart) departInput.value = depart;
-    if (arrivee) arriveeInput.value = arrivee;
-    if (date) dateInput.value = date;
-
-    // Simuler un clic pour lancer la recherche
-    btnRecherche.click();
-  } else {
-    console.warn("⏳ Inputs pas encore disponibles dans le DOM.");
+function tryFillInputsFromURL(attempt = 0) {
+    const departInput = document.getElementById("depart");
+    const arriveeInput = document.getElementById("arrivee");
+    const dateInput = document.getElementById("date");
+    const btnRecherche = document.getElementById("btn-recherche");
+  
+    if (departInput && arriveeInput && dateInput && btnRecherche) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const depart = urlParams.get("depart");
+      const arrivee = urlParams.get("arrivee");
+      const date = urlParams.get("date");
+  
+      if (depart) departInput.value = depart;
+      if (arrivee) arriveeInput.value = arrivee;
+      if (date) dateInput.value = date;
+  
+       
+    } else if (attempt < 10) {
+      // Essaye à nouveau dans 100ms (max 10 fois = 1s)
+      setTimeout(() => tryFillInputsFromURL(attempt + 1), 100);
+    } else {
+      console.warn("⏳ Inputs toujours indisponibles après 1s");
+    }
   }
-}, 100); // léger délai pour laisser le DOM s'injecter
-
+  
+  // Lancer après DOMContentLoaded
+  // Attendre que le DOM ait bien été injecté dans #main-page (ex. via le routeur)
+setTimeout(() => {
+    tryFillInputsFromURL();
+  }, 200); // ← délai suffisant pour que #main-page contienne le bon HTML
  
-
+ 
+  
 
 
 document.getElementById("btn-recherche").addEventListener("click", async () => {

@@ -6,19 +6,13 @@ const route404 = new Route("404", "Page introuvable", "/pages/404.html",[]);
 
 // Fonction pour récupérer la route correspondant à une URL donnée
 const getRouteByUrl = (url) => {
-  let currentRoute = null;
-  // Parcours de toutes les routes pour trouver la correspondance
-  allRoutes.forEach((element) => {
-    if (element.url == url) {
-      currentRoute = element;
-    }
-  });
-  // Si aucune correspondance n'est trouvée, on retourne la route 404
-  if (currentRoute != null) {
-    return currentRoute;
-  } else {
-    return route404;
+   // Rediriger vers "/" si url vide ou "/index.html"
+   if (url === "/" || url === "" || url === "/index.html") {
+    return allRoutes.find(r => r.url === "/");
   }
+
+  const route = allRoutes.find(r => r.url === url);
+  return route || route404;
 };
 
 // Fonction pour charger le contenu de la page
