@@ -96,6 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
+
+// AFFICHER MES TRAJETS
+
 async function afficherMesTrajets() {
     const token = getToken();
   
@@ -127,6 +130,14 @@ async function afficherMesTrajets() {
       trajets.forEach(ride => {
         const trajetDiv = document.createElement("div");
         trajetDiv.setAttribute("data-id", ride.id);
+trajetDiv.setAttribute("data-lieu_depart", ride.lieu_depart);
+trajetDiv.setAttribute("data-lieu_arrivee", ride.lieu_arrivee);
+trajetDiv.setAttribute("data-date_depart", ride.date_depart);
+trajetDiv.setAttribute("data-heure_depart", ride.heure_depart);
+trajetDiv.setAttribute("data-heure_arrivee", ride.heure_arrivee);
+trajetDiv.setAttribute("data-nb_place", ride.nb_place);
+trajetDiv.setAttribute("data-prix_personne", ride.prix_personne);
+trajetDiv.setAttribute("data-energie", ride.energie);
 
         trajetDiv.style.border = "1px solid #ccc";
         trajetDiv.style.padding = "10px";
@@ -137,7 +148,8 @@ async function afficherMesTrajets() {
           <p><strong>${ride.lieu_depart}</strong> → <strong>${ride.lieu_arrivee}</strong></p>
           <p>${ride.date_depart} — ${ride.heure_depart.slice(0, 5)} à ${ride.heure_arrivee.slice(0, 5)}</p>
           <p>${ride.nb_place} places – ${ride.prix_personne} € – ${ride.energie}</p>
-          <button class="btn-supprimer">🗑 Supprimer</button>
+          <button class="btn-modifier"> Modifier</button>
+          <button class="btn-supprimer"> Supprimer</button>
         `;
         
         recap.appendChild(trajetDiv); 
@@ -164,7 +176,7 @@ async function afficherMesTrajets() {
         if (e.target.classList.contains("btn-supprimer")) {
           const trajetDiv = e.target.closest("div[data-id]");
           if (!trajetDiv) return;
-      
+              
           const id = trajetDiv.dataset.id;
           const token = getToken();
       
@@ -192,5 +204,86 @@ async function afficherMesTrajets() {
             alert("❌ Erreur réseau.");
           }
         }
+ //MODIFIER
+        if (e.target.classList.contains("btn-modifier")) {
+            const trajetDiv = e.target.closest("div[data-id]");
+            const id = trajetDiv.dataset.id;
+          
+            // Empêche d'ajouter plusieurs fois un formulaire
+            if (trajetDiv.querySelector(".form-modifier")) return;
+          
+            // Récupère les infos actuelles affichées
+            const infos = trajetDiv.querySelectorAll("p");
+            const [lieu, dateHeure, details] = infos;
+          
+            // Création du mini-formulaire
+            const form = document.createElement("form");
+            form.classList.add("form-modifier");
+            form.innerHTML = `
+  <label>Lieu départ: <input name="lieu_depart" value="${trajetDiv.dataset.lieu_depart}" /></label><br/>
+  <label>Lieu arrivée: <input name="lieu_arrivee" value="${trajetDiv.dataset.lieu_arrivee}" /></label><br/>
+  <label>Date: <input name="date_depart" type="date" value="${trajetDiv.dataset.date_depart}" /></label><br/>
+  <label>Heure départ: <input name="heure_depart" type="time" value="${trajetDiv.dataset.heure_depart.slice(0, 5)}" /></label><br/>
+  <label>Heure arrivée: <input name="heure_arrivee" type="time" value="${trajetDiv.dataset.heure_arrivee.slice(0, 5)}" /></label><br/>
+  <label>Places: <input name="nb_place" type="number" value="${trajetDiv.dataset.nb_place}" /></label><br/>
+  <label>Prix/personne: <input name="prix_personne" type="number" step="0.01" value="${trajetDiv.dataset.prix_personne}" /></label><br/>
+  <label>Énergie: <input name="energie" value="${trajetDiv.dataset.energie}" /></label><br/>
+  <button type="submit">💾 Enregistrer</button>
+`;
+          
+            trajetDiv.appendChild(form);
+          
+            form.addEventListener("submit", async (event) => {
+              event.preventDefault();
+              const token = getToken();
+          
+              const formData = new FormData(form);
+              const updated = Object.fromEntries(formData.entries());
+              
+                // ✅ Conversion des valeurs numériques
+                 updated.nb_place = parseInt(updated.nb_place);
+                 updated.prix_personne = parseFloat(updated.prix_personne);
+
+              // ✅ CORRECTION DES HEURES
+              if (updated.heure_depart && !updated.heure_depart.includes(":")) {
+                updated.heure_depart += ":00";
+              } else if (updated.heure_depart.length === 5) {
+                updated.heure_depart += ":00";
+              }
+            
+              if (updated.heure_arrivee && !updated.heure_arrivee.includes(":")) {
+                updated.heure_arrivee += ":00";
+              } else if (updated.heure_arrivee.length === 5) {
+                updated.heure_arrivee += ":00";
+              }
+
+
+          
+              try {
+                const res = await fetch(`http://localhost:8000/api/ride/${id}`, {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-AUTH-TOKEN": token
+                  },
+                  body: JSON.stringify(updated)
+                });
+          
+                if (res.ok) {
+                  alert("✅ Trajet modifié !");
+                  afficherMesTrajets();
+                } else {
+                  const msg = await res.text();
+                  console.error("❌ Erreur modification :", msg);
+                  alert("❌ Échec : " + msg);
+                }
+              } catch (err) {
+                console.error("❌ Erreur réseau :", err);
+              }
+            });
+          }
+          
+
       });
       
+     
