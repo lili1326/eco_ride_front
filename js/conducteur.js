@@ -166,6 +166,16 @@ async function afficherMesTrajets() {
         trajetDiv.style.padding = "10px";
         trajetDiv.style.marginBottom = "10px";
         trajetDiv.style.borderRadius = "8px";
+
+        trajetDiv.dataset.id = ride.id;
+        trajetDiv.dataset.lieu_depart = ride.lieu_depart;
+        trajetDiv.dataset.lieu_arrivee = ride.lieu_arrivee;
+        trajetDiv.dataset.date_depart = ride.date_depart;
+        trajetDiv.dataset.heure_depart = ride.heure_depart;
+        trajetDiv.dataset.heure_arrivee = ride.heure_arrivee;
+        trajetDiv.dataset.nb_place = ride.nb_place;
+        trajetDiv.dataset.prix_personne = ride.prix_personne;
+        trajetDiv.dataset.energie = ride.energie;
       
         trajetDiv.innerHTML = `
           <p><strong>${ride.lieu_depart}</strong> → <strong>${ride.lieu_arrivee}</strong></p>
@@ -235,6 +245,7 @@ async function afficherMesTrajets() {
  //MODIFIER
         if (e.target.classList.contains("btn-modifier")) {
             const trajetDiv = e.target.closest("div[data-id]");
+            console.log("🔍 trajetDiv:", trajetDiv);
             const id = trajetDiv.dataset.id;
           
             // Empêche d'ajouter plusieurs fois un formulaire
@@ -285,7 +296,7 @@ async function afficherMesTrajets() {
                 updated.heure_arrivee += ":00";
               }
 
-
+              console.log("📦 Données envoyées au backend :", updated);
           
               try {
                 const res = await fetch(`http://localhost:8000/api/ride/${id}`, {
