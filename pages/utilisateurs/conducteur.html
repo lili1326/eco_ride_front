@@ -5,19 +5,35 @@
   </div>
   <div class="container-row">
     <div class="form-wrapper">
-      <h3>Véhicules</h3> 
-      <form id="form-conducteur">
-        <label for="selectVehicule">Sélectionner un véhicule :</label>
-        <select id="selectVehicule">
-          <option disabled selected value="">-- Choisir un véhicule --</option>
-        </select>
-        
-        <div id="vehicules-container">
-          <!-- Formulaires ou récapitulatifs ici -->
-        </div>
-        <button type="button" id="btn-ajouter-vehicule">+ Ajouter un véhicule</button>
+      <h3> Ajouter un véhicule</h3>
+      <form id="form-car">
+        <label>Marque:
+          <input type="text" name="marque" required />
+        </label>
+        <label>Modèle:
+          <input type="text" name="modele" required />
+        </label>
+        <label>Plaque:
+          <input type="text" name="plaque" required />
+        </label>
+        <label>Date 1re immatriculation:
+          <input type="date" name="date" required />
+        </label>
+        <label>Couleur:
+          <input type="text" name="couleur" required />
+        </label>
+        <label>Énergie:
+          <input type="text" name="energie" required />
+        </label>
+        <label>Nombre de places:
+          <input type="number" name="nb_places" min="1" max="9" required />
+        </label>
+        <button type="submit">🚀 Enregistrer le véhicule</button>
       </form>
     </div>
+    <button type="button" id="btn-mes-vehicules">🚗 Voir mes véhicules</button>
+    <div id="recap-vehicules" style="margin-top: 20px;"></div>
+    
  
     <div class="form-wrapper">
       <h3>Préférences</h3>
