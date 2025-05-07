@@ -39,26 +39,36 @@
       <h3>Préférences</h3>
       <form id="preferences-form">
         <label>Fumeur:
-          <select name="fumeur">
+          <select name="fumeur" required>
+            <option value="" disabled selected>-- Choisir --</option>
             <option value="oui">Oui</option>
             <option value="non">Non</option>
           </select>
         </label>
+      
         <label>Animaux:
-          <select name="animaux">
+          <select name="animaux" required>
+            <option value="" disabled selected>-- Choisir --</option>
             <option value="oui">Oui</option>
             <option value="non">Non</option>
           </select>
         </label>
+      
         <label>Musique:
-          <input type="text" name="musique">
+          <input type="text" name="musique"  required>
         </label>
-        <label>Divers:
-          <textarea name="divers"></textarea>
+      
+        <label>Description:
+          <textarea name="description"  required></textarea>
         </label>
+      
         <button type="submit" id="btn-regiter-preference">Enregistrer</button>
       </form>
-    </div>
+      
+      <button type="button" id="btn-mes-preferences">Voir mes préférences</button>
+      <div id="recap-preference" style="margin-top: 20px;"></div>
+    
+
     <div class="form-wrapper">
         <h3>Proposer un trajet</h3>
         <form id="form-trajet">
