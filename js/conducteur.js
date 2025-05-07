@@ -326,3 +326,207 @@ async function afficherMesTrajets() {
       });
       
      
+ //CAR
+
+console.log("✅ Script car.js chargé");
+
+// Soumission du formulaire ajout de véhicule
+setTimeout(() => {
+  const form = document.getElementById("form-car");
+
+  if (!form) {
+    console.warn("❌ Formulaire 'form-car' introuvable.");
+    return;
+  }
+
+  console.log("✅ Formulaire véhicule détecté");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const token = getToken();
+    if (!token) {
+      alert("❌ Utilisateur non authentifié.");
+      return;
+    }
+
+    const data = {
+      marque: form.marque.value,
+      modele: form.modele.value,
+      immatriculation: form.plaque.value,
+      couleur: form.couleur.value,
+      energie: form.energie.value,
+      nb_places: parseInt(form.nb_places.value),
+      date_premiere_immatriculation: form.date.value,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/api/car", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-AUTH-TOKEN": token
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("❌ Erreur backend :", text);
+        alert("❌ Erreur lors de la création du véhicule.");
+        return;
+      }
+
+      alert("✅ Véhicule enregistré !");
+
+      afficherVehicules();
+
+    } catch (err) {
+      console.error("❌ Erreur réseau :", err);
+      alert("❌ Erreur réseau ou serveur.");
+    }
+  });
+}, 500);
+
+// Affichage des véhicules
+async function afficherVehicules() {
+  const token = getToken();
+  const recap = document.getElementById("recap-vehicules");
+  if (!recap) return;
+
+  recap.innerHTML = "";
+  try {
+    const res = await fetch("http://localhost:8000/api/car/mes-vehicules", {
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
+      }
+    });
+
+    if (!res.ok) {
+      recap.innerHTML = "<p>Erreur chargement véhicules</p>";
+      return;
+    }
+
+    const cars = await res.json();
+    if (!cars.length) {
+      recap.innerHTML = "<p>Aucun véhicule enregistré.</p>";
+      return;
+    }
+
+    cars.forEach(car => {
+      recap.innerHTML += `
+        <div class="car-card" data-id="${car.id}" data-marque="${car.marque}" data-modele="${car.modele}" data-immatriculation="${car.immatriculation}" data-couleur="${car.couleur}" data-energie="${car.energie}" data-nb_places="${car.nb_places}" data-date="${car.date_premiere_immatriculation}">
+          <p><strong>${car.marque} ${car.modele}</strong> - ${car.immatriculation}</p>
+          <p>${car.couleur} • ${car.nb_places} places • ${car.energie}</p>
+          <p>1ère immatriculation : ${new Date(car.date_premiere_immatriculation).toLocaleDateString("fr-FR")}</p>
+          <button class="btn-modifier-car">Modifier</button>
+          <button class="btn-supprimer-car">Supprimer</button>
+        </div>
+      `;
+    });
+  } catch (err) {
+    console.error("Erreur chargement véhicules:", err);
+  }
+}
+
+// Initialiser affichage
+document.addEventListener("DOMContentLoaded", afficherVehicules);
+  
+ // 🔘 Bouton pour voir manuellement
+ const btn = document.getElementById("btn-mes-vehicules");
+ if (btn) {
+   btn.addEventListener("click", afficherVehicules);
+    //form.reset();
+afficherVehicules();
+ }
+
+// Gestion suppression et modification inline
+document.addEventListener("click", async (e) => {
+  const token = getToken();
+
+  // 🔥 SUPPRIMER UN VÉHICULE
+  if (e.target.classList.contains("btn-supprimer-car")) {
+    console.log("🗑️ Clic sur supprimer détecté");
+    const card = e.target.closest(".car-card");
+    const id = card.dataset.id;
+
+    if (confirm("❌ Supprimer ce véhicule ?")) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/car/${id}`, {
+          method: "DELETE",
+          headers: {
+            "X-AUTH-TOKEN": token
+          }
+        });
+
+        if (response.ok) {
+          alert("🚗 Véhicule supprimé !");
+          afficherVehicules(); // Recharge la liste
+        } else {
+          const errText = await response.text();
+          console.error("❌ Erreur backend :", errText);
+          alert("❌ Erreur lors de la suppression du véhicule.");
+        }
+      } catch (err) {
+        console.error("❌ Erreur réseau :", err);
+        alert("❌ Erreur réseau.");
+      }
+    }
+  }
+
+  // ✏️ MODIFIER UN VÉHICULE
+  if (e.target.classList.contains("btn-modifier-car")) {
+    console.log("✏️ Clic sur modifier détecté");
+    const card = e.target.closest(".car-card");
+    const id = card.dataset.id;
+
+    // Ne pas dupliquer le formulaire
+    if (card.querySelector("form")) return;
+
+    const form = document.createElement("form");
+    form.classList.add("form-modifier");
+    form.innerHTML = `
+      <label>Marque: <input name="marque" value="${card.dataset.marque}"></label><br/>
+      <label>Modèle: <input name="modele" value="${card.dataset.modele}"></label><br/>
+      <label>Plaque: <input name="immatriculation" value="${card.dataset.immatriculation}"></label><br/>
+      <label>Couleur: <input name="couleur" value="${card.dataset.couleur}"></label><br/>
+      <label>Énergie: <input name="energie" value="${card.dataset.energie}"></label><br/>
+      <label>Places: <input name="nb_places" type="number" value="${card.dataset.nb_places}"></label><br/>
+      <label>Date immatriculation: <input name="date_premiere_immatriculation" type="date" value="${card.dataset.date.slice(0, 10)}"></label><br/>
+      <button type="submit">💾 Enregistrer</button>
+    `;
+
+    card.appendChild(form);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const updated = Object.fromEntries(formData.entries());
+      updated.nb_places = parseInt(updated.nb_places);
+
+      try {
+        const res = await fetch(`http://localhost:8000/api/car/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-AUTH-TOKEN": token
+          },
+          body: JSON.stringify(updated)
+        });
+
+        if (res.ok) {
+          alert("✅ Véhicule modifié !");
+          afficherVehicules();
+        } else {
+          const msg = await res.text();
+          console.error("❌ Erreur modification :", msg);
+          alert("❌ Échec : " + msg);
+        }
+      } catch (err) {
+        console.error("❌ Erreur réseau :", err);
+      }
+    });
+  }
+});
+ 
