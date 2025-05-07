@@ -530,3 +530,210 @@ document.addEventListener("click", async (e) => {
   }
 });
  
+
+
+//------------------------------------PREFERENCE-----------------------------------------------------
+console.log("✅ Script preference.js chargé");
+
+// Soumission du formulaire ajout de préférence
+setTimeout(() => {
+  const form = document.getElementById("preferences-form");
+
+  if (!form) {
+    console.warn("❌ Formulaire 'preferences-form' introuvable.");
+    return;
+  }
+
+  console.log("✅ Formulaire préférence détecté");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const token = getToken();
+    if (!token) {
+      alert("❌ Utilisateur non authentifié.");
+      return;
+    }
+
+    const data = {
+      fumeur: form.fumeur.value ,
+      animaux: form.animaux.value ,
+      musique: form.musique.value ,
+      description: form.description.value ,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/api/preference", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-AUTH-TOKEN": token
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("❌ Erreur backend :", text);
+        alert("❌ Erreur lors de la création de la préférence.");
+        return;
+      }
+
+      alert("✅ Préférence enregistrée !");
+      afficherPreferences();
+
+    } catch (err) {
+      console.error("❌ Erreur réseau :", err);
+      alert("❌ Erreur réseau ou serveur.");
+    }
+  });
+}, 500);
+
+// Affichage des préférences (structure identique à afficherVehicules)
+async function afficherPreferences() {
+  const token = getToken();
+  const recap = document.getElementById("recap-preference");
+  if (!recap) return;
+
+  recap.innerHTML = "";
+  try {
+    const res = await fetch("http://localhost:8000/api/preference/me", {
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
+      }
+    });
+
+    if (!res.ok) {
+      recap.innerHTML = "<p>Erreur chargement des préférences</p>";
+      return;
+    }
+
+    const pref = await res.json();
+
+    recap.innerHTML += `
+      <div class="pref-card"
+           data-id="${pref.id}"
+           data-fumeur="${pref.fumeur}"
+           data-animaux="${pref.animaux}"
+           data-musique="${pref.musique}"
+           data-description="${pref.description}">
+        <p><strong>Préférences utilisateur</strong></p>
+        <p> Fumeur : ${pref.fumeur}</p>
+        <p> Animaux : ${pref.animaux}</p>
+        <p> Musique : ${pref.musique}</p>
+        <p> Description : ${pref.description}</p>
+        <button class="btn-modifier-pref">Modifier</button>
+        <button class="btn-supprimer-pref">Supprimer</button>
+      </div>
+    `;
+  } catch (err) {
+    console.error("Erreur chargement préférences:", err);
+    recap.innerHTML = "<p>❌ Erreur réseau</p>";
+  }
+}
+
+
+// Initialiser affichage
+document.addEventListener("DOMContentLoaded", afficherPreferences);
+
+// Bouton manuel si présent
+const btn1 = document.getElementById("btn-mes-preferences");
+if (btn1) {
+  btn1.addEventListener("click", afficherPreferences);
+  afficherPreferences();
+}
+
+ // Gestion des boutons "Supprimer" et "Modifier"
+document.addEventListener("click", async (e) => {
+  const token = getToken();
+
+  // 🔥 SUPPRIMER
+  if (e.target.classList.contains("btn-supprimer-pref")) {
+    const card = e.target.closest(".pref-card");
+    const id = card.dataset.id;
+
+    if (confirm("❌ Supprimer cette préférence ?")) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/preference/${id}`, {
+          method: "DELETE",
+          headers: {
+            "X-AUTH-TOKEN": token
+          }
+        });
+
+        if (response.ok) {
+          alert("🗑️ Préférence supprimée !");
+          afficherPreferences();
+        } else {
+          const errText = await response.text();
+          console.error("❌ Backend a renvoyé une erreur :", errText);
+          alert("❌ Erreur suppression : " + errText);
+        }
+      } catch (err) {
+        console.error("❌ Erreur réseau :", err);
+        alert("❌ Erreur réseau.");
+      }
+    }
+  }
+
+  // ✏️ MODIFIER
+  if (e.target.classList.contains("btn-modifier-pref")) {
+    const card = e.target.closest(".pref-card");
+    const id = card.dataset.id;
+
+    const form = document.createElement("form");
+    form.classList.add("form-modifier");
+    form.innerHTML = `
+      <label>Fumeur:
+        <select name="fumeur">
+          <option value="oui" ${card.dataset.fumeur === "oui" ? "selected" : ""}>Oui</option>
+          <option value="non" ${card.dataset.fumeur === "non" ? "selected" : ""}>Non</option>
+        </select>
+      </label><br/>
+      <label>Animaux:
+        <select name="animaux">
+          <option value="oui" ${card.dataset.animaux === "oui" ? "selected" : ""}>Oui</option>
+          <option value="non" ${card.dataset.animaux === "non" ? "selected" : ""}>Non</option>
+        </select>
+      </label><br/>
+      <label>Musique:
+        <input type="text" name="musique" value="${card.dataset.musique || ""}">
+      </label><br/>
+      <label>Description:
+        <textarea name="description">${card.dataset.description || ""}</textarea>
+      </label><br/>
+      <button type="submit">💾 Enregistrer</button>
+    `;
+
+    card.replaceWith(form);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const updated = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch(`http://localhost:8000/api/preference/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-AUTH-TOKEN": token
+          },
+          body: JSON.stringify(updated)
+        });
+
+        if (res.ok) {
+          alert("✅ Préférences mises à jour !");
+          afficherPreferences();
+        } else {
+          const errText = await res.text();
+          console.error("❌ Erreur modification :", errText);
+          alert("❌ Échec de la modification.");
+        }
+      } catch (err) {
+        console.error("❌ Erreur réseau :", err);
+      }
+    });
+  }
+});
