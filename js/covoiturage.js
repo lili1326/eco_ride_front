@@ -1,3 +1,26 @@
+
+import { getToken } from "./auth/auth.js";
+
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-details")) {
+    const id = e.target.dataset.id;
+    const token = getToken();
+
+    if (!token) {
+      alert("❌ Vous devez être connecté pour voir les détails.");
+      window.location.href = "/signin"; // redirige vers la page de login
+      return;
+    }
+
+    // Redirige vers la vue détaillée si connecté
+    window.history.pushState({}, "", `/vueDetaileeCovoiturage?id=${id}`);
+    window.dispatchEvent(new PopStateEvent("popstate")); // recharge dynamiquement via routeur
+  }
+});
+
+
+
+
 console.log("✅ covoiturage.js chargé");
 function tryFillInputsFromURL(attempt = 0) {
     const departInput = document.getElementById("depart");
@@ -96,10 +119,13 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
           <p>Date: ${dateStr}</p>
           <p>Horaire: ${heureDep} / ${heureArr}</p>
           <p>Véhicule ${ride.energie}</p>
-          <button onclick="route(event)" data-url="/vueDetaileeCovoiturage">Détail</button>
+           <button class="btn-details" data-id="${ride.id}">Voir les détails</button>
         `;
         list.appendChild(card);
       });
+
+    
+
     } catch (err) {
       console.error("❌ Erreur lors de la recherche :", err);
       document.getElementById("messageTrajet").textContent = "❌ Erreur lors de la recherche.";
