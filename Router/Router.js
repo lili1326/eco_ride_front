@@ -73,6 +73,17 @@ const routeEvent = (event) => {
 // Gestion de l'événement de retour en arrière dans l'historique du navigateur
 window.onpopstate = LoadContentPage;
 // Assignation de la fonction routeEvent à la propriété route de la fenêtre
-window.route = routeEvent;
+//window.route = routeEvent;
+window.route = function (e) {
+ e.preventDefault();
+  const url = e.currentTarget.dataset.url;
+  console.log("🧭 Redirection vers :", url);
+  if (url) {
+    window.history.pushState({}, "", url);
+    LoadContentPage();
+  }
+};
+
+
 // Chargement du contenu de la page au chargement initial
 LoadContentPage();
