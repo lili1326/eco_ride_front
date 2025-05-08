@@ -40,7 +40,24 @@ console.log("✅ Script vueDetaileeCovoiturage.js chargé");
     if (pr) pr.textContent = `Prix par personne : ${ride.prix_personne} €`;
     if (d) d.textContent = `Date : ${new Date(ride.date_depart).toLocaleDateString("fr-FR")}`;
     if (h) h.textContent = `Heure : ${new Date(ride.heure_depart).toTimeString().slice(0, 5)} → ${new Date(ride.heure_arrivee).toTimeString().slice(0, 5)}`;
-  } catch (err) {
+  
+//  INFOS VOITURE
+
+document.getElementById("car-marque").textContent =  `Marque : ${car.marque}`;
+document.getElementById("car-modele").textContent = ride.voiture?.modele || "Inconnu";
+document.getElementById("car-energie").textContent = ride.voiture?.energie || "Inconnue";
+
+//  PRÉFÉRENCES CONDUCTEUR
+const prefList = document.getElementById("preferences-list");
+if (ride.conducteur?.preferences?.length > 0) {
+  prefList.innerHTML = ride.conducteur.preferences
+    .map(p => `• ${p.description}`)
+    .join("<br>");
+} else {
+  prefList.textContent = "Aucune préférence renseignée.";
+}
+
+} catch (err) {
     console.error("❌ Erreur :", err);
     const detail = document.getElementById("detail-trajet");
     if (detail) detail.innerHTML = "❌ Erreur de chargement.";

@@ -6,6 +6,8 @@
   <div class="container-row">
     <div class="form-wrapper">
       <h3> Ajouter un véhicule</h3>
+      <label for="voiture">Véhicule :</label>
+ 
       <form id="form-car">
         <label>Marque:
           <input type="text" name="marque" required />
@@ -96,6 +98,10 @@
           <label>Énergie utilisée:
             <input type="text" name="energie" required>
           </label>
+          <label for="voiture">Véhicule utilisé :</label>
+          <select name="voiture" id="voiture" required>
+            <option disabled selected>-- Choisir un véhicule --</option>
+          </select>
           <button type="submit" id="btn-trajetEnLigne">Mettre en ligne</button>
         </form>
       </div>    

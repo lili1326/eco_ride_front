@@ -8,6 +8,26 @@ console.log("✅ Script conducteur.js chargé");
 
 setTimeout(() => {
   const form = document.getElementById("form-trajet");
+// Charger les véhicules dans le <select>
+const selectVoiture = document.getElementById("voiture");
+if (selectVoiture) {
+  fetch("http://localhost:8000/api/car/mes-vehicules", {
+    headers: { "X-AUTH-TOKEN": getToken() }
+  })
+    .then(res => res.json())
+    .then(cars => {
+      cars.forEach(car => {
+        const opt = document.createElement("option");
+        opt.value = `/api/car/${car.id}`; // format IRI
+        opt.textContent = `${car.marque} ${car.modele} (${car.couleur})`;
+        selectVoiture.appendChild(opt);
+      });
+    })
+    .catch(err => {
+      console.error("❌ Erreur chargement véhicules :", err);
+    });
+}
+
 
   if (!form) {
     console.warn("❌ Formulaire 'form-trajet' introuvable.");
@@ -24,6 +44,12 @@ setTimeout(() => {
       alert("❌ Utilisateur non authentifié.");
       return;
     }
+   
+
+
+
+
+
 
     console.log("📤 Soumission interceptée");
 
@@ -46,7 +72,8 @@ setTimeout(() => {
       heure_arrivee: arriveeTime,
       nb_place: parseInt(form.places.value),
       prix_personne: parseFloat(form.prix.value),
-      energie: form.energie.value
+      energie: form.energie.value,
+      voiture: form.voiture.value 
     };
 
     console.log("📦 Données à envoyer :", data);

@@ -93,6 +93,9 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
         return;
       }
 
+
+
+      
         // Afficher les sections si résultats
     filterContainer.style.display = "block";
     resultsContainer.style.display = "block";
@@ -123,8 +126,7 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
         `;
         list.appendChild(card);
       });
-
-    
+ 
 
     } catch (err) {
       console.error("❌ Erreur lors de la recherche :", err);

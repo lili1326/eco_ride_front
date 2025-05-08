@@ -89,17 +89,17 @@
       <button onclick="route(event)" data-url="/account" data-protected="true">Participer</button>    
   </div>
   <div class="cardCarPreference">
-    <p class="car">
-    <span>Véhicule: </span><br> 
-      Marque: <br> 
-     Modèle:  <br> 
-    Energie utilisée: <br></p>
-    <p class="preference">
-        <span>Préférences: </span><br> 
-        Fumeur: <br> 
-        Animaux:  <br> 
-        Music: <br>
-        Divers: <br><br><br><br><br><br></p>
+    <p class="car" id="car-info">
+      <span>Véhicule :</span><br> 
+      Marque : <span id="car-marque">...</span><br> 
+      Modèle : <span id="car-modele">...</span><br> 
+      Énergie utilisée : <span id="car-energie">...</span><br>
+    </p>
+  
+    <p class="preference" id="pref-info">
+      <span>Préférences :</span><br>
+      <span id="preferences-list">Chargement...</span>
+    </p>
   </div>
   <div class="cardAvis">
     <p class="preference">
