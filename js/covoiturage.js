@@ -7,7 +7,7 @@ document.addEventListener("click", (e) => {
     const token = getToken();
 
     if (!token) {
-      alert("❌ Vous devez être connecté pour voir les détails.");
+      alert(" Vous devez être connecté pour voir les détails.");
       window.location.href = "/signin"; // redirige vers la page de login
       return;
     }
@@ -21,7 +21,7 @@ document.addEventListener("click", (e) => {
 
 
 
-console.log("✅ covoiturage.js chargé");
+console.log(" covoiturage.js chargé");
 function tryFillInputsFromURL(attempt = 0) {
     const departInput = document.getElementById("depart");
     const arriveeInput = document.getElementById("arrivee");
@@ -43,7 +43,7 @@ function tryFillInputsFromURL(attempt = 0) {
       // Essaye à nouveau dans 100ms (max 10 fois = 1s)
       setTimeout(() => tryFillInputsFromURL(attempt + 1), 100);
     } else {
-      console.warn("⏳ Inputs toujours indisponibles après 1s");
+      console.warn(" Inputs toujours indisponibles après 1s");
     }
   }
   
@@ -78,18 +78,18 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
     try {
       const res = await fetch(url);
   
-      // 👉 Ajoute cette ligne pour debug si erreur
+      //  Ajoute cette ligne pour debug si erreur
       const text = await res.text();
       console.log("Contenu brut reçu :", text);
   
-      // ⚠️ Repars du texte brut pour parser le JSON
+      //  Repars du texte brut pour parser le JSON
       const rides = JSON.parse(text);
   
       const list = document.querySelector("#listCovoiturage .containerList");
       list.innerHTML = "";
   
       if (rides.length === 0) {
-        document.getElementById("messageTrajet").textContent = "🚫 Aucun trajet trouvé.";
+        document.getElementById("messageTrajet").textContent = " Aucun trajet trouvé.";
         return;
       }
 
@@ -129,7 +129,7 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
  
 
     } catch (err) {
-      console.error("❌ Erreur lors de la recherche :", err);
-      document.getElementById("messageTrajet").textContent = "❌ Erreur lors de la recherche.";
+      console.error(" Erreur lors de la recherche :", err);
+      document.getElementById("messageTrajet").textContent = "Erreur lors de la recherche.";
     }
   });

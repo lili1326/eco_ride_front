@@ -4,30 +4,28 @@
   </div>
 </div>
 <div class="container">
-    <form>
-        <div class="pseudo">
-            <label for="PseudoInput" class="form-label">Pseudo</label>
-            <input type="text" class="form-control" id="PseudoInput" placeholder="Votre pseudo" name="Pseudo"> 
-        </div>
-        <div class="renom">
-            <label for="PrenomInput" class="form-label">Prénom</label>
-            <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom"   name="Prenom"> 
-        </div> 
-        <div class="profileAccount">
-          <input type="file" id="uploadInput" accept="image/*" style="margin-top: 10px;"/>  
-            <img id="avatar" src="/assets/images/avatar.png" alt="Votre profil"
-            width="70px" height="70px"
-            style="border-radius: 50%; object-fit: cover; display: inline-block;"/>
-            </div>   
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary">Modifier vos informations</button>
-           
-            <button type="button" class="btn btn-danger">Supprimer mon compte</button>
-        </div>
-    </form>
-    <div class="text-center pt-3">
-        <a href="/modifPassword">Cliquez ici pour modifier votre mot de passe</a>
-    </div>
+  <div class="profil-summary text-center mt-3">
+    <h3 id="welcome-message" class="text-primary"></h3>
+    <p><strong>Prénom :</strong> <span id="prenom-info">...</span></p>
+    <p><strong>Pseudo :</strong> <span id="pseudo-info">...</span></p>
+  </div>
+
+  <div class="profileAccount text-center mt-3">
+    <input type="file" id="uploadInput" accept="image/*" style="margin-top: 10px;" />  
+    <br />
+    <img id="avatar" src="/assets/images/avatar.png" alt="Votre profil"
+         width="70px" height="70px"
+         style="border-radius: 50%; object-fit: cover;" />
+  </div>
+
+  <div class="text-center mt-3">
+    <button type="button" class="btn btn-primary">Modifier vos informations</button>
+    <button type="button" class="btn btn-danger">Supprimer mon compte</button>
+  </div>
+
+  <div class="text-center pt-3">
+    <a href="/modifPassword">Cliquez ici pour modifier votre mot de passe</a>
+  </div>
 </div>
 
 <section class="etatUtilisateur">

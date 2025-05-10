@@ -1,15 +1,15 @@
 import { getToken } from "./auth/auth.js";
 
-console.log("✅ Script vueDetaileeCovoiturage.js chargé");
+console.log(" Script vueDetaileeCovoiturage.js chargé");
 
 (async () => {
   const id = new URLSearchParams(window.location.search).get("id");
   const token = getToken();
 
   if (!id || !token) {
-    if (!id) alert("❌ ID manquant");
+    if (!id) alert(" ID manquant");
     if (!token) {
-      alert("❌ Vous devez être connecté pour accéder aux détails.");
+      alert(" Vous devez être connecté pour accéder aux détails.");
       window.location.href = "/signin";
     }
     return;
@@ -26,8 +26,14 @@ console.log("✅ Script vueDetaileeCovoiturage.js chargé");
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
+
     const ride = await res.json();
-    console.log("🎯 Trajet :", ride);
+    console.log(" Trajet :", ride);
+
+  //INFO UESR CONDUCTEUR 
+     document.getElementById("conducteur-nom").textContent = ride.conducteur?.pseudo || "Conducteur inconnu";
+
+//INFO TRAJET
 
     const t = document.getElementById("trajet");
     const p = document.getElementById("places");
@@ -41,9 +47,10 @@ console.log("✅ Script vueDetaileeCovoiturage.js chargé");
     if (d) d.textContent = `Date : ${new Date(ride.date_depart).toLocaleDateString("fr-FR")}`;
     if (h) h.textContent = `Heure : ${new Date(ride.heure_depart).toTimeString().slice(0, 5)} → ${new Date(ride.heure_arrivee).toTimeString().slice(0, 5)}`;
   
+
 //  INFOS VOITURE
 
-document.getElementById("car-marque").textContent =  `Marque : ${car.marque}`;
+document.getElementById("car-marque").textContent = ride.voiture?.marque || "Inconnue";
 document.getElementById("car-modele").textContent = ride.voiture?.modele || "Inconnu";
 document.getElementById("car-energie").textContent = ride.voiture?.energie || "Inconnue";
 
@@ -58,8 +65,8 @@ if (ride.conducteur?.preferences?.length > 0) {
 }
 
 } catch (err) {
-    console.error("❌ Erreur :", err);
+    console.error(" Erreur :", err);
     const detail = document.getElementById("detail-trajet");
-    if (detail) detail.innerHTML = "❌ Erreur de chargement.";
+    if (detail) detail.innerHTML = " Erreur de chargement.";
   }
 })();
