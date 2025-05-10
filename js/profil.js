@@ -1,16 +1,22 @@
-console.log("profil.js chargé");
+import { getToken } from "./auth/auth.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const pseudoInput = document.getElementById("PseudoInput");
-  const prenomInput = document.getElementById("PrenomInput");
+console.log(" profil.js chargé");
 
-  if (!pseudoInput || !prenomInput) {
-    console.warn("⛔ Éléments profil introuvables sur cette page");
+setTimeout(() => {
+  const pseudoEl = document.getElementById("pseudo-info");
+  const prenomEl = document.getElementById("prenom-info");
+  const welcome = document.getElementById("welcome-message");
+
+  if (!pseudoEl || !prenomEl || !welcome) {
+    console.warn(" Les éléments HTML de profil ne sont pas encore disponibles.");
     return;
   }
 
   const token = getToken();
-  if (!token) return;
+  if (!token) {
+    console.warn(" Aucun token trouvé. L'utilisateur n'est peut-être pas connecté.");
+    return;
+  }
 
   fetch("http://localhost:8000/api/account/me", {
     headers: {
@@ -19,10 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
   })
     .then(res => res.json())
     .then(user => {
-      pseudoInput.value = user.pseudo || "";
-      prenomInput.value = user.firstName || "";
+      console.log("🔍 Utilisateur reçu :", user);
+      prenomEl.textContent = user.firstName || "inconnu";
+      pseudoEl.textContent = user.pseudo || "inconnu";
+      welcome.textContent = `Bonjour ${user.firstName}, bienvenue sur votre page personnelle !`;
     })
     .catch(err => {
-      console.error("Erreur de chargement user :", err);
+      console.error(" Erreur lors du chargement des infos utilisateur :", err);
     });
-});
+
+}, 300); // Laisse le temps au DOM de se charger via le routeur
