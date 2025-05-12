@@ -1,21 +1,43 @@
+  
+
+ 
  //stocker en cookie notre token
 const tokenCookieName = "accesstoken";
 const RoleCookieName ="role"; 
  
  
  // DECONNECTION
- const signoutBtn=document.getElementById("signout-btn").addEventListener("click", signout);
+ document.addEventListener("DOMContentLoaded", () => {
+    showAndHideElementsForRoles();
+  
+    const signoutBtn = document.getElementById("signout-btn");
+    if (signoutBtn) {
+      signoutBtn.addEventListener("click", () => {
+        eraseCookie("accesstoken");
+        eraseCookie("role");
+        showAndHideElementsForRoles();
+        window.location.href = "/"; // redirection vers accueil
+      });
+    }
+  });
+ 
 
  function signout(){
     eraseCookie(tokenCookieName);
     eraseCookie(RoleCookieName);
-
-    window.location.reload();
+    showAndHideElementsForRoles();
+  window.location.reload();
 }
 
+
+
+
  //role
- function getRole(){
-    return getCookie(RoleCookieName);
+ function getRole(){ 
+    const role = getCookie(RoleCookieName);
+    console.log(" Role détecté :", role);
+    return role;
+     
  }
 
 //méthode de gestion de cookies placer -récupére-supprimé
@@ -49,7 +71,7 @@ function eraseCookie(name) {
 
 
 function setToken(token){
-    setCookie(tokenCookieName, token, 7);
+    setCookie(tokenCookieName,token, 7);
 }
 
 function getToken(){
@@ -57,16 +79,11 @@ function getToken(){
 }
 
 //si nous sommes connectés ou non.
-function isConnected(){
-    
-    if(getToken() == null || getToken == undefined){
-        return false;
-    }
-    else{
-        
-        return true;
-    }
+ function isConnected() {
+  const token = getCookie("accesstoken");
+  return token !== null && token !== "";
 }
+
  
 
  /*
@@ -77,6 +94,7 @@ connected (admid ou client)
   client
 */
 
+ 
 function showAndHideElementsForRoles(){
     const userConnected = isConnected();
     const role = getRole();
@@ -100,13 +118,8 @@ function showAndHideElementsForRoles(){
                     element.classList.add("d-none");
                 }
                 break;
-                case 'employer': 
-                if(!userConnected || role != "employer"){
-                    element.classList.add("d-none");
-                }
-                break;
-            case 'client': 
-                if(!userConnected || role != "client"){
+            case 'user': 
+                if(!userConnected || role != "user"){
                     element.classList.add("d-none");
                 }
                 break;
@@ -114,4 +127,37 @@ function showAndHideElementsForRoles(){
     })
 }
 
- 
+function sanitiezHtml(text){
+    const tempHtml = document.createElement('div');
+    tempHtml.textContent = text;
+    return tempHtml.innerHTML;
+} 
+
+function getInfosUser(){
+    
+    
+    let myHeaders = new Headers();
+    myHeaders.append("X-AUTH-TOKEN", getToken());
+
+    let requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+    fetch(apiUrl+"account/me", requestOptions)
+    .then(response =>{
+        if(response.ok){
+            return response.json();
+        }
+        else{
+            console.log("Impossible de récupérer les informations utilisateur");
+        }
+    })
+    .then(result => {
+       // console.log(result);
+       return result;
+    })
+    .catch(error =>{
+        console.error("erreur lors de la récupération des données utilisateur", error);
+    });
+}
