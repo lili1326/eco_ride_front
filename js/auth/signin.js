@@ -48,6 +48,10 @@ const loginUrl = role === 'admin'
 
             mainRole = mainRole.replace('ROLE_', '').toLowerCase();
         
+            //   stocke le rôle dans localStorage
+localStorage.setItem("user_role", mainRole);
+console.log(" Rôle stocké :", mainRole);
+
             //  Stocker le rôle en cookie
             setCookie(RoleCookieName, mainRole.toLowerCase(), 7);
             showAndHideElementsForRoles();

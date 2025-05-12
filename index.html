@@ -70,10 +70,34 @@
 <script src="js/script.js"></script>
  <script type="module" src="./Router/router.js"></script>
  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  
- 
-</script>
+ <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const token = document.cookie.includes("accesstoken");
+    const role = document.cookie.includes("role=admin") ? "admin" : 
+                 document.cookie.includes("role=user") ? "user" : "aucun";
 
+    console.log("🔍 Cookie brut :", document.cookie);
+    console.log("🔍 isConnected :", token);
+    console.log("🔍 role :", role);
+
+    document.querySelectorAll('[data-show]').forEach(el => {
+      el.classList.remove("d-none"); // tout afficher d'abord
+
+      if (el.dataset.show === "disconnected" && token) {
+        el.classList.add("d-none");
+      }
+      if (el.dataset.show === "connected" && !token) {
+        el.classList.add("d-none");
+      }
+      if (el.dataset.show === "admin" && (role !== "admin")) {
+        el.classList.add("d-none");
+      }
+      if (el.dataset.show === "user" && (role !== "user")) {
+        el.classList.add("d-none");
+      }
+    });
+  });
+</script>
 </body>
 </html>
 

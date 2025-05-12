@@ -122,8 +122,7 @@ btnValidation.addEventListener("click", async (e) => {
                 window.location.href = "/signin";
             }, 1000);
             console.log("Token :", result.apiToken);
-            // localStorage.setItem("token", result.apiToken); // facultatif
-            // window.location.href = "/signin"; // redirige vers connexion
+            
         } else {
             alert("Erreur lors de l'inscription : " + (result.message || "Inconnue"));
             console.log(result);
