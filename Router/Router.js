@@ -45,7 +45,7 @@ const LoadContentPage = async () => {
   if (actualRoute.pathJS != "") {
     // Création d'une balise script
     let scriptTag = document.createElement("script");
-    scriptTag.setAttribute("type", "module"); // ✅ obligatoire pour utiliser import/export
+    scriptTag.setAttribute("type", "module"); //  obligatoire pour utiliser import/export
    // scriptTag.setAttribute("type", "text/javascript");
     scriptTag.setAttribute("src", actualRoute.pathJS);
 
@@ -73,6 +73,17 @@ const routeEvent = (event) => {
 // Gestion de l'événement de retour en arrière dans l'historique du navigateur
 window.onpopstate = LoadContentPage;
 // Assignation de la fonction routeEvent à la propriété route de la fenêtre
-window.route = routeEvent;
+//window.route = routeEvent;
+window.route = function (e) {
+ e.preventDefault();
+  const url = e.currentTarget.dataset.url;
+  console.log("🧭 Redirection vers :", url);
+  if (url) {
+    window.history.pushState({}, "", url);
+    LoadContentPage();
+  }
+};
+
+
 // Chargement du contenu de la page au chargement initial
 LoadContentPage();

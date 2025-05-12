@@ -1,4 +1,4 @@
-import { setToken, getToken } from "./auth.js"; // ajuste le chemin si besoin
+import { setToken, getToken } from "./auth.js"; 
 
 const pseudoInput = document.getElementById("PseudoInput");
 const mailInput =document.getElementById("EmailInput");
@@ -37,6 +37,7 @@ btnSingin.addEventListener("click", checkCredentials);//information de connectio
         
             //  Stocker le rôle en cookie
             setCookie(RoleCookieName, mainRole.toLowerCase(), 7);
+            showAndHideElementsForRoles();
         
             //  Rediriger
             window.location.replace("/account");

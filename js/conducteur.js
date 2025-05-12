@@ -1,31 +1,57 @@
 import { getToken } from "./auth/auth.js";
 
 
-console.log("✅ Script conducteur.js chargé");
+console.log("Script conducteur.js chargé");
 
-// 🔐 Fonction pour récupérer le token depuis localStorage
+//  pour récupérer le token depuis localStorage
  
 
 setTimeout(() => {
   const form = document.getElementById("form-trajet");
+// Charger les véhicules dans le <select>
+const selectVoiture = document.getElementById("voiture");
+if (selectVoiture) {
+  fetch("http://localhost:8000/api/car/mes-vehicules", {
+    headers: { "X-AUTH-TOKEN": getToken() }
+  })
+    .then(res => res.json())
+    .then(cars => {
+      cars.forEach(car => {
+        const opt = document.createElement("option");
+        opt.value = `/api/car/${car.id}`; // format IRI
+        opt.textContent = `${car.marque} ${car.modele} (${car.couleur})`;
+        selectVoiture.appendChild(opt);
+      });
+    })
+    .catch(err => {
+      console.error(" Erreur chargement véhicules :", err);
+    });
+}
+
 
   if (!form) {
-    console.warn("❌ Formulaire 'form-trajet' introuvable.");
+    console.warn(" Formulaire 'form-trajet' introuvable.");
     return;
   }
 
-  console.log("✅ Formulaire détecté");
+  console.log(" Formulaire détecté");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const token = getToken();
     if (!token) {
-      alert("❌ Utilisateur non authentifié.");
+      alert(" Utilisateur non authentifié.");
       return;
     }
+   
 
-    console.log("📤 Soumission interceptée");
+
+
+
+
+
+    console.log(" Soumission interceptée");
 
     const horaire = form.horaire.value.trim(); // exemple : "08h00/09h00"
     let departTime = "", arriveeTime = "";
@@ -35,7 +61,7 @@ setTimeout(() => {
       departTime = dep.replace("h", ":") + ":00";   // ex : 08:00:00
       arriveeTime = arr.replace("h", ":") + ":00";  // ex : 09:00:00
     } else {
-      alert("❌ Format horaire invalide. Format attendu : 08h00/10h30");
+      alert(" Format horaire invalide. Format attendu : 08h00/10h30");
       return;
     }
     const data = {
@@ -46,7 +72,8 @@ setTimeout(() => {
       heure_arrivee: arriveeTime,
       nb_place: parseInt(form.places.value),
       prix_personne: parseFloat(form.prix.value),
-      energie: form.energie.value
+      energie: form.energie.value,
+      voiture: form.voiture.value 
     };
 
     console.log("📦 Données à envoyer :", data);
@@ -60,14 +87,14 @@ setTimeout(() => {
         },
         body: JSON.stringify(data)
       });
-      const result = await response.json(); // ✅ Lire d'abord le JSON
+      const result = await response.json(); //  Lire d'abord le JSON
       if (!response.ok) {
         const text = await response.text();
-        console.error("❌ Erreur backend :", text);
-        alert("❌ Erreur lors de la création du trajet.");
+        console.error(" Erreur backend :", text);
+        alert(" Erreur lors de la création du trajet.");
         return;
       }
-      alert("✅ Trajet bien enregistré !");
+      alert(" Trajet bien enregistré !");
 
 const ride = result;
 
@@ -87,7 +114,7 @@ const heureArr = extraireHeure(ride.heure_arrivee);
 
 const recap = document.getElementById("recap-trajet");
 recap.innerHTML = `
-  <h4>📝 Récapitulatif du trajet proposé :</h4>
+  <h4> Récapitulatif du trajet proposé :</h4>
   <ul style="list-style: none; padding-left: 0;">
     <li><strong>Départ :</strong> ${ride.lieu_depart} à ${heureDep}</li>
     <li><strong>Arrivée :</strong> ${ride.lieu_arrivee} à ${heureArr}</li>
@@ -102,8 +129,8 @@ recap.innerHTML = `
 
       form.reset();
     } catch (err) {
-      console.error("❌ Erreur réseau :", err);
-      alert("❌ Erreur réseau ou serveur.");
+      console.error(" Erreur réseau :", err);
+      alert(" Erreur réseau ou serveur.");
     }
   });
 }, 500); 
@@ -133,8 +160,8 @@ async function afficherMesTrajets() {
   
       if (!response.ok) {
         const text = await response.text();
-        console.error("❌ Erreur en récupérant les trajets :", text);
-        alert("❌ Impossible de récupérer les trajets.");
+        console.error(" Erreur en récupérant les trajets :", text);
+        alert(" Impossible de récupérer les trajets.");
         return;
       }
   
@@ -142,11 +169,11 @@ async function afficherMesTrajets() {
       const recap = document.getElementById("recap-trajet");
   
       if (!trajets.length) {
-        recap.innerHTML = "<p>🚫 Aucun trajet enregistré.</p>";
+        recap.innerHTML = "<p> Aucun trajet enregistré.</p>";
         return;
       }
   
-      recap.innerHTML = "<h4>📝 Mes trajets</h4>";
+      recap.innerHTML = "<h4> Mes trajets</h4>";
     
       function extraireHeure(isoString) {
         const d = new Date(isoString);
@@ -194,8 +221,8 @@ async function afficherMesTrajets() {
      
   
     } catch (err) {
-      console.error("❌ Erreur réseau :", err);
-      alert("❌ Erreur réseau");
+      console.error(" Erreur réseau :", err);
+      alert(" Erreur réseau");
     }
 
   }
@@ -217,8 +244,8 @@ async function afficherMesTrajets() {
           const id = trajetDiv.dataset.id;
           const token = getToken();
       
-          console.log("🛑 ID à supprimer :", id);
-          console.log("🔐 Token envoyé :", token);
+          console.log(" ID à supprimer :", id);
+          console.log(" Token envoyé :", token);
       
           try {
             const response = await fetch(`http://localhost:8000/api/ride/${id}`, {
@@ -229,16 +256,16 @@ async function afficherMesTrajets() {
             });
       
             if (response.ok) {
-              alert("✅ Trajet supprimé !");
+              alert(" Trajet supprimé !");
               afficherMesTrajets(); // Recharge la liste
             } else {
               const errText = await response.text();
-              console.error("❌ Backend a renvoyé une erreur :", errText);
-              alert("❌ Erreur suppression : " + errText);
+              console.error(" Backend a renvoyé une erreur :", errText);
+              alert(" Erreur suppression : " + errText);
             }
           } catch (err) {
-            console.error("❌ Erreur réseau :", err);
-            alert("❌ Erreur réseau.");
+            console.error(" Erreur réseau :", err);
+            alert(" Erreur réseau.");
           }
         }
 
@@ -279,11 +306,11 @@ async function afficherMesTrajets() {
               const formData = new FormData(form);
               const updated = Object.fromEntries(formData.entries());
               
-                // ✅ Conversion des valeurs numériques
+                //  Conversion des valeurs numériques
                  updated.nb_place = parseInt(updated.nb_place);
                  updated.prix_personne = parseFloat(updated.prix_personne);
 
-              // ✅ CORRECTION DES HEURES
+              //  CORRECTION DES HEURES
               if (updated.heure_depart && !updated.heure_depart.includes(":")) {
                 updated.heure_depart += ":00";
               } else if (updated.heure_depart.length === 5) {
@@ -296,7 +323,7 @@ async function afficherMesTrajets() {
                 updated.heure_arrivee += ":00";
               }
 
-              console.log("📦 Données envoyées au backend :", updated);
+              console.log(" Données envoyées au backend :", updated);
           
               try {
                 const res = await fetch(`http://localhost:8000/api/ride/${id}`, {
@@ -309,15 +336,15 @@ async function afficherMesTrajets() {
                 });
           
                 if (res.ok) {
-                  alert("✅ Trajet modifié !");
+                  alert(" Trajet modifié !");
                   afficherMesTrajets();
                 } else {
                   const msg = await res.text();
-                  console.error("❌ Erreur modification :", msg);
-                  alert("❌ Échec : " + msg);
+                  console.error(" Erreur modification :", msg);
+                  alert(" Échec : " + msg);
                 }
               } catch (err) {
-                console.error("❌ Erreur réseau :", err);
+                console.error(" Erreur réseau :", err);
               }
             });
           }
@@ -328,25 +355,25 @@ async function afficherMesTrajets() {
      
  //CAR
 
-console.log("✅ Script car.js chargé");
+console.log(" Script car.js chargé");
 
 // Soumission du formulaire ajout de véhicule
 setTimeout(() => {
   const form = document.getElementById("form-car");
 
   if (!form) {
-    console.warn("❌ Formulaire 'form-car' introuvable.");
+    console.warn(" Formulaire 'form-car' introuvable.");
     return;
   }
 
-  console.log("✅ Formulaire véhicule détecté");
+  console.log(" Formulaire véhicule détecté");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const token = getToken();
     if (!token) {
-      alert("❌ Utilisateur non authentifié.");
+      alert(" Utilisateur non authentifié.");
       return;
     }
 
@@ -372,8 +399,8 @@ setTimeout(() => {
 
       if (!response.ok) {
         const text = await response.text();
-        console.error("❌ Erreur backend :", text);
-        alert("❌ Erreur lors de la création du véhicule.");
+        console.error(" Erreur backend :", text);
+        alert(" Erreur lors de la création du véhicule.");
         return;
       }
 
@@ -382,8 +409,8 @@ setTimeout(() => {
       afficherVehicules();
 
     } catch (err) {
-      console.error("❌ Erreur réseau :", err);
-      alert("❌ Erreur réseau ou serveur.");
+      console.error(" Erreur réseau :", err);
+      alert(" Erreur réseau ou serveur.");
     }
   });
 }, 500);
@@ -433,7 +460,7 @@ async function afficherVehicules() {
 // Initialiser affichage
 document.addEventListener("DOMContentLoaded", afficherVehicules);
   
- // 🔘 Bouton pour voir manuellement
+ //  Bouton pour voir manuellement
  const btn = document.getElementById("btn-mes-vehicules");
  if (btn) {
    btn.addEventListener("click", afficherVehicules);
@@ -445,13 +472,13 @@ afficherVehicules();
 document.addEventListener("click", async (e) => {
   const token = getToken();
 
-  // 🔥 SUPPRIMER UN VÉHICULE
+  //  SUPPRIMER UN VÉHICULE
   if (e.target.classList.contains("btn-supprimer-car")) {
-    console.log("🗑️ Clic sur supprimer détecté");
+    console.log(" Clic sur supprimer détecté");
     const card = e.target.closest(".car-card");
     const id = card.dataset.id;
 
-    if (confirm("❌ Supprimer ce véhicule ?")) {
+    if (confirm(" Supprimer ce véhicule ?")) {
       try {
         const response = await fetch(`http://localhost:8000/api/car/${id}`, {
           method: "DELETE",
@@ -461,23 +488,22 @@ document.addEventListener("click", async (e) => {
         });
 
         if (response.ok) {
-          alert("🚗 Véhicule supprimé !");
+          alert(" Véhicule supprimé !");
           afficherVehicules(); // Recharge la liste
         } else {
           const errText = await response.text();
-          console.error("❌ Erreur backend :", errText);
-          alert("❌ Erreur lors de la suppression du véhicule.");
+          console.error(" Erreur backend :", errText);
+          alert(" Erreur lors de la suppression du véhicule.");
         }
       } catch (err) {
-        console.error("❌ Erreur réseau :", err);
-        alert("❌ Erreur réseau.");
+        console.error(" Erreur réseau :", err);
+        alert(" Erreur réseau.");
       }
     }
   }
-
-  // ✏️ MODIFIER UN VÉHICULE
+  //  MODIFIER UN VÉHICULE
   if (e.target.classList.contains("btn-modifier-car")) {
-    console.log("✏️ Clic sur modifier détecté");
+    console.log(" Clic sur modifier détecté");
     const card = e.target.closest(".car-card");
     const id = card.dataset.id;
 
@@ -516,12 +542,220 @@ document.addEventListener("click", async (e) => {
         });
 
         if (res.ok) {
-          alert("✅ Véhicule modifié !");
+          alert("Véhicule modifié !");
           afficherVehicules();
         } else {
           const msg = await res.text();
-          console.error("❌ Erreur modification :", msg);
-          alert("❌ Échec : " + msg);
+          console.error(" Erreur modification :", msg);
+          alert(" Échec : " + msg);
+        }
+      } catch (err) {
+        console.error(" Erreur réseau :", err);
+      }
+    });
+  }
+});
+ 
+
+
+//------------------------------------PREFERENCE-----------------------------------------------------
+console.log(" Script preference.js chargé");
+
+// Soumission du formulaire ajout de préférence
+setTimeout(() => {
+  const form = document.getElementById("preferences-form");
+
+  if (!form) {
+    console.warn("❌ Formulaire 'preferences-form' introuvable.");
+    return;
+  }
+
+  console.log("✅ Formulaire préférence détecté");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const token = getToken();
+    if (!token) {
+      alert("❌ Utilisateur non authentifié.");
+      return;
+    }
+
+    const data = {
+      fumeur: form.fumeur.value ,
+      animaux: form.animaux.value ,
+      musique: form.musique.value ,
+      description: form.description.value ,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/api/preference", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-AUTH-TOKEN": token
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("❌ Erreur backend :", text);
+        alert("❌ Erreur lors de la création de la préférence.");
+        return;
+      }
+
+      alert("✅ Préférence enregistrée !");
+      afficherPreferences();
+
+    } catch (err) {
+      console.error("❌ Erreur réseau :", err);
+      alert("❌ Erreur réseau ou serveur.");
+    }
+  });
+}, 500);
+
+// Affichage des préférences (structure identique à afficherVehicules)
+async function afficherPreferences() {
+  const token = getToken();
+  const recap = document.getElementById("recap-preference");
+  if (!recap) return;
+
+  recap.innerHTML = "";
+  try {
+    const res = await fetch("http://localhost:8000/api/preference/me", {
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
+      }
+    });
+
+    if (!res.ok) {
+      recap.innerHTML = "<p>Erreur chargement des préférences</p>";
+      return;
+    }
+
+    const pref = await res.json();
+
+    recap.innerHTML += `
+      <div class="pref-card"
+           data-id="${pref.id}"
+           data-fumeur="${pref.fumeur}"
+           data-animaux="${pref.animaux}"
+           data-musique="${pref.musique}"
+           data-description="${pref.description}">
+        <p><strong>Préférences utilisateur</strong></p>
+        <p> Fumeur : ${pref.fumeur}</p>
+        <p> Animaux : ${pref.animaux}</p>
+        <p> Musique : ${pref.musique}</p>
+        <p> Description : ${pref.description}</p>
+        <button class="btn-modifier-pref">Modifier</button>
+        <button class="btn-supprimer-pref">Supprimer</button>
+      </div>
+    `;
+  } catch (err) {
+    console.error("Erreur chargement préférences:", err);
+    recap.innerHTML = "<p>❌ Erreur réseau</p>";
+  }
+}
+
+
+// Initialiser affichage
+document.addEventListener("DOMContentLoaded", afficherPreferences);
+
+// Bouton manuel si présent
+const btn1 = document.getElementById("btn-mes-preferences");
+if (btn1) {
+  btn1.addEventListener("click", afficherPreferences);
+  afficherPreferences();
+}
+
+ // Gestion des boutons "Supprimer" et "Modifier"
+document.addEventListener("click", async (e) => {
+  const token = getToken();
+
+  // 🔥 SUPPRIMER
+  if (e.target.classList.contains("btn-supprimer-pref")) {
+    const card = e.target.closest(".pref-card");
+    const id = card.dataset.id;
+
+    if (confirm("❌ Supprimer cette préférence ?")) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/preference/${id}`, {
+          method: "DELETE",
+          headers: {
+            "X-AUTH-TOKEN": token
+          }
+        });
+
+        if (response.ok) {
+          alert("🗑️ Préférence supprimée !");
+          afficherPreferences();
+        } else {
+          const errText = await response.text();
+          console.error("❌ Backend a renvoyé une erreur :", errText);
+          alert("❌ Erreur suppression : " + errText);
+        }
+      } catch (err) {
+        console.error("❌ Erreur réseau :", err);
+        alert("❌ Erreur réseau.");
+      }
+    }
+  }
+
+  // ✏️ MODIFIER
+  if (e.target.classList.contains("btn-modifier-pref")) {
+    const card = e.target.closest(".pref-card");
+    const id = card.dataset.id;
+
+    const form = document.createElement("form");
+    form.classList.add("form-modifier");
+    form.innerHTML = `
+      <label>Fumeur:
+        <select name="fumeur">
+          <option value="oui" ${card.dataset.fumeur === "oui" ? "selected" : ""}>Oui</option>
+          <option value="non" ${card.dataset.fumeur === "non" ? "selected" : ""}>Non</option>
+        </select>
+      </label><br/>
+      <label>Animaux:
+        <select name="animaux">
+          <option value="oui" ${card.dataset.animaux === "oui" ? "selected" : ""}>Oui</option>
+          <option value="non" ${card.dataset.animaux === "non" ? "selected" : ""}>Non</option>
+        </select>
+      </label><br/>
+      <label>Musique:
+        <input type="text" name="musique" value="${card.dataset.musique || ""}">
+      </label><br/>
+      <label>Description:
+        <textarea name="description">${card.dataset.description || ""}</textarea>
+      </label><br/>
+      <button type="submit">💾 Enregistrer</button>
+    `;
+
+    card.replaceWith(form);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const updated = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch(`http://localhost:8000/api/preference/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-AUTH-TOKEN": token
+          },
+          body: JSON.stringify(updated)
+        });
+
+        if (res.ok) {
+          alert("✅ Préférences mises à jour !");
+          afficherPreferences();
+        } else {
+          const errText = await res.text();
+          console.error("❌ Erreur modification :", errText);
+          alert("❌ Échec de la modification.");
         }
       } catch (err) {
         console.error("❌ Erreur réseau :", err);
@@ -529,4 +763,3 @@ document.addEventListener("click", async (e) => {
     });
   }
 });
- 

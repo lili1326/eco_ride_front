@@ -6,6 +6,8 @@
   <div class="container-row">
     <div class="form-wrapper">
       <h3> Ajouter un véhicule</h3>
+      <label for="voiture">Véhicule :</label>
+ 
       <form id="form-car">
         <label>Marque:
           <input type="text" name="marque" required />
@@ -39,26 +41,36 @@
       <h3>Préférences</h3>
       <form id="preferences-form">
         <label>Fumeur:
-          <select name="fumeur">
+          <select name="fumeur" required>
+            <option value="" disabled selected>-- Choisir --</option>
             <option value="oui">Oui</option>
             <option value="non">Non</option>
           </select>
         </label>
+      
         <label>Animaux:
-          <select name="animaux">
+          <select name="animaux" required>
+            <option value="" disabled selected>-- Choisir --</option>
             <option value="oui">Oui</option>
             <option value="non">Non</option>
           </select>
         </label>
+      
         <label>Musique:
-          <input type="text" name="musique">
+          <input type="text" name="musique"  required>
         </label>
-        <label>Divers:
-          <textarea name="divers"></textarea>
+      
+        <label>Description:
+          <textarea name="description"  required></textarea>
         </label>
+      
         <button type="submit" id="btn-regiter-preference">Enregistrer</button>
       </form>
-    </div>
+      
+      <button type="button" id="btn-mes-preferences">Voir mes préférences</button>
+      <div id="recap-preference" style="margin-top: 20px;"></div>
+    
+
     <div class="form-wrapper">
         <h3>Proposer un trajet</h3>
         <form id="form-trajet">
@@ -86,6 +98,10 @@
           <label>Énergie utilisée:
             <input type="text" name="energie" required>
           </label>
+          <label for="voiture">Véhicule utilisé :</label>
+          <select name="voiture" id="voiture" required>
+            <option disabled selected>-- Choisir un véhicule --</option>
+          </select>
           <button type="submit" id="btn-trajetEnLigne">Mettre en ligne</button>
         </form>
       </div>    

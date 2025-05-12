@@ -1,4 +1,4 @@
- // auth.js
+ 
 
  // 1. Sauvegarde du token dans localStorage
 export function setToken(token) {

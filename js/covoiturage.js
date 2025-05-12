@@ -1,4 +1,27 @@
-console.log("✅ covoiturage.js chargé");
+
+import { getToken } from "./auth/auth.js";
+
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-details")) {
+    const id = e.target.dataset.id;
+    const token = getToken();
+
+    if (!token) {
+      alert(" Vous devez être connecté pour voir les détails.");
+      window.location.href = "/signin"; // redirige vers la page de login
+      return;
+    }
+
+    // Redirige vers la vue détaillée si connecté
+    window.history.pushState({}, "", `/vueDetaileeCovoiturage?id=${id}`);
+    window.dispatchEvent(new PopStateEvent("popstate")); // recharge dynamiquement via routeur
+  }
+});
+
+
+
+
+console.log(" covoiturage.js chargé");
 function tryFillInputsFromURL(attempt = 0) {
     const departInput = document.getElementById("depart");
     const arriveeInput = document.getElementById("arrivee");
@@ -20,7 +43,7 @@ function tryFillInputsFromURL(attempt = 0) {
       // Essaye à nouveau dans 100ms (max 10 fois = 1s)
       setTimeout(() => tryFillInputsFromURL(attempt + 1), 100);
     } else {
-      console.warn("⏳ Inputs toujours indisponibles après 1s");
+      console.warn(" Inputs toujours indisponibles après 1s");
     }
   }
   
@@ -55,21 +78,24 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
     try {
       const res = await fetch(url);
   
-      // 👉 Ajoute cette ligne pour debug si erreur
+      //  Ajoute cette ligne pour debug si erreur
       const text = await res.text();
       console.log("Contenu brut reçu :", text);
   
-      // ⚠️ Repars du texte brut pour parser le JSON
+      //  Repars du texte brut pour parser le JSON
       const rides = JSON.parse(text);
   
       const list = document.querySelector("#listCovoiturage .containerList");
       list.innerHTML = "";
   
       if (rides.length === 0) {
-        document.getElementById("messageTrajet").textContent = "🚫 Aucun trajet trouvé.";
+        document.getElementById("messageTrajet").textContent = " Aucun trajet trouvé.";
         return;
       }
 
+
+
+      
         // Afficher les sections si résultats
     filterContainer.style.display = "block";
     resultsContainer.style.display = "block";
@@ -96,12 +122,14 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
           <p>Date: ${dateStr}</p>
           <p>Horaire: ${heureDep} / ${heureArr}</p>
           <p>Véhicule ${ride.energie}</p>
-          <button onclick="route(event)" data-url="/vueDetaileeCovoiturage">Détail</button>
+           <button class="btn-details" data-id="${ride.id}">Voir les détails</button>
         `;
         list.appendChild(card);
       });
+ 
+
     } catch (err) {
-      console.error("❌ Erreur lors de la recherche :", err);
-      document.getElementById("messageTrajet").textContent = "❌ Erreur lors de la recherche.";
+      console.error(" Erreur lors de la recherche :", err);
+      document.getElementById("messageTrajet").textContent = "Erreur lors de la recherche.";
     }
   });
