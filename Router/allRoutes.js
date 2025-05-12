@@ -12,6 +12,8 @@ export const allRoutes = [
     new Route("/conducteur"," Conducteur","/pages/utilisateurs/conducteur.html",["client","employer"],"js/conducteur.js"), 
     new Route("/passager"," Passager","/pages/utilisateurs/passager.html",["client","employer"]), 
     new Route("/conducteurPassager","Conducteur et ou  Passager","/pages/utilisateurs/conducteurPassager.html",["client","employer"]),
+    new Route("/admin-dashboard", "Tableau de bord Admin", "/pages/admin/dashboard.html", ["admin"], "/js/admin/dashboard.js"),
+
 
 ];
 

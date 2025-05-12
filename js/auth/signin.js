@@ -5,16 +5,27 @@ const mailInput =document.getElementById("EmailInput");
 const passwordInput = document.getElementById("PasswordInput");
 const btnSingin = document.getElementById("btnSignin");
 
+ 
+
+
 btnSingin.addEventListener("click", checkCredentials);//information de connection
 
+
+
    async function checkCredentials() {
+
+const role = document.querySelector('input[name="role"]:checked').value;
+const loginUrl = role === 'admin'
+  ? "http://localhost:8000/api/admin/login"
+  : "http://localhost:8000/api/login";
+
     const payload = {
         username: mailInput.value,
         password: passwordInput.value
     };
 
     try {
-        const response = await fetch("http://localhost:8000/api/login", {
+        const response = await fetch( loginUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -34,13 +45,22 @@ btnSingin.addEventListener("click", checkCredentials);//information de connectio
         
             //  Extraire un rôle utile (ex: client, admin)
             let mainRole = roles.find(r => r !== 'ROLE_USER') || 'client'; // fallback client
+
+            mainRole = mainRole.replace('ROLE_', '').toLowerCase();
         
             //  Stocker le rôle en cookie
             setCookie(RoleCookieName, mainRole.toLowerCase(), 7);
             showAndHideElementsForRoles();
         
             //  Rediriger
-            window.location.replace("/account");
+
+            if (mainRole === "admin") {
+  window.location.replace("/admin-dashboard");
+} else {
+  window.location.replace("/account");
+}
+
+
         } else {
             //  Mauvais identifiants
             mailInput.classList.add("is-invalid");
