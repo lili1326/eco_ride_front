@@ -27,7 +27,7 @@
                 <a class="nav-link" href="/covoiturage" >Covoiturage</a>
               </li>
                <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
+                <a class="nav-link" href="/contact">Contact</a>
               </li>
               <li class="nav-item" data-show="disconnected">
                 <a class="nav-link" href="/signin">Connection</a>
@@ -54,7 +54,7 @@
     <footer class="bg-dark text-white text-center footer">
         <div class="row">
             <div class="col-12 col-lg-4 pt-3">
-                 <a href="#">Mention Légales</a>
+                 <a href="/pages/mentions-legales.html">Mention Légales</a>
             </div>
             <div class="col-12 col-lg-4 pt-3">
                  <a href="#">contact@ecoride.com</a>
@@ -70,34 +70,7 @@
 <script src="js/script.js"></script>
  <script type="module" src="./Router/router.js"></script>
  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
- <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const token = document.cookie.includes("accesstoken");
-    const role = document.cookie.includes("role=admin") ? "admin" : 
-                 document.cookie.includes("role=user") ? "user" : "aucun";
-
-    console.log("🔍 Cookie brut :", document.cookie);
-    console.log("🔍 isConnected :", token);
-    console.log("🔍 role :", role);
-
-    document.querySelectorAll('[data-show]').forEach(el => {
-      el.classList.remove("d-none"); // tout afficher d'abord
-
-      if (el.dataset.show === "disconnected" && token) {
-        el.classList.add("d-none");
-      }
-      if (el.dataset.show === "connected" && !token) {
-        el.classList.add("d-none");
-      }
-      if (el.dataset.show === "admin" && (role !== "admin")) {
-        el.classList.add("d-none");
-      }
-      if (el.dataset.show === "user" && (role !== "user")) {
-        el.classList.add("d-none");
-      }
-    });
-  });
-</script>
+ 
 </body>
 </html>
 

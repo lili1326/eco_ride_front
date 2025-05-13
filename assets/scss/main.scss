@@ -237,7 +237,7 @@ main{
 }
 
 //CARD  LES TROIS
-.card, .cardCarPreference ,.cardAvis{
+.card, .cardCarPreference ,.cardAvis {
     background: $secondary;
     padding: 20px 0;
     border-radius: 10px;
@@ -256,7 +256,7 @@ main{
 }
 
 //CARD PREFERENCES
-.cardCarPreference{
+.cardCarPreference {
     height: 500px;
 }
 .cardCarPreference .car ,.preference{
@@ -480,3 +480,58 @@ footer.footer{
 .footer a:hover {
     color: $tertiary; 
 }
+// CONTACT
+
+ .cardContact {
+ 
+       margin: 50px auto 0 auto;
+    max-width: 500px;
+ 
+    padding: 20px;
+    background:$primary;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+  }
+
+  .cardContact input,
+  .cardContact textarea {
+    background-color: $background;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .cardContact input:focus,
+  .cardContact textarea:focus {
+    outline: 2px solid white;
+  }
+
+  #button {
+     display: block;
+  margin: 20px auto 10px auto;
+      min-width: 220px;
+    border-radius: 8px;
+     margin-inline-start: auto;
+  }
+
+  #button:hover {
+    //background-color: #3e8e41;
+  }
+
+  .cardContact label {
+    font-weight: bold;
+  }
+
+  .cardContact a {
+    color: $dark;
+    text-decoration: none;
+  }
+
+  .cardContact a:hover {
+    text-decoration: underline;
+  }
