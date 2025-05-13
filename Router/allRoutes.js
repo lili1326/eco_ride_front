@@ -10,7 +10,7 @@ export const allRoutes = [
     new Route("/account", "Mon espace", "/pages/auth/account.html",["client"],"/js/profil.js"),
     new Route("/modifPassword", "Modifier mon mot de passe", "/pages/auth/modifPassword.html",["client"]),
     new Route("/conducteur"," Conducteur","/pages/utilisateurs/conducteur.html",["client","employer"],"js/conducteur.js"), 
-    new Route("/passager"," Passager","/pages/utilisateurs/passager.html",["client","employer"]), 
+    new Route("/passager"," Passager","/pages/utilisateurs/passager.html",["client","employer"],"/js/passager.js"), 
     new Route("/conducteurPassager","Conducteur et ou  Passager","/pages/utilisateurs/conducteurPassager.html",["client","employer"]),
     new Route("/admin-dashboard", "Tableau de bord Admin", "/pages/admin/dashboard.html", ["admin"], "/js/admin/dashboard.js"),
     new Route("/mentions-legales", "Mentions légales", "/pages/mentions-legales.html", []),

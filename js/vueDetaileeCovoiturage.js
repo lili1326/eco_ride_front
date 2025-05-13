@@ -2,6 +2,9 @@ import { getToken } from "./auth/auth.js";
 
 console.log(" Script vueDetaileeCovoiturage.js chargé");
 
+
+ 
+
 (async () => {
   const id = new URLSearchParams(window.location.search).get("id");
   const token = getToken();
@@ -29,6 +32,47 @@ console.log(" Script vueDetaileeCovoiturage.js chargé");
 
     const ride = await res.json();
     console.log(" Trajet :", ride);
+
+    const participerBtn = document.getElementById("participer-btn");
+
+if (participerBtn) {
+  participerBtn.addEventListener("click", async () => {
+    try {
+      const res = await fetch("http://localhost:8000/api/participate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-AUTH-TOKEN": token
+        },
+        body: JSON.stringify({ ride_id: id })
+      });
+
+       if (!res.ok) {
+  const error = await res.json();
+
+  if (res.status === 409 && error.error === "Déjà inscrit") {
+    alert(" Vous êtes déjà inscrit à ce trajet !");
+  } else if (res.status === 401) {
+    alert(" Vous devez être connecté.");
+    window.location.href = "/signin";
+  } else {
+    alert(" Une erreur est survenue lors de la participation.");
+  }
+
+  return; // stop la suite (ne redirige pas)
+}
+
+      alert("Participation enregistrée !");
+       window.history.pushState({}, "", "/passager");
+window.dispatchEvent(new PopStateEvent("popstate"));;  
+    } catch (error) {
+      console.error("Erreur participation :", error);
+      alert("Impossible de participer à ce trajet.");
+    }
+  });
+
+}
+
 
   //INFO UESR CONDUCTEUR 
      document.getElementById("conducteur-nom").textContent = ride.conducteur?.pseudo || "Conducteur inconnu";
