@@ -191,52 +191,72 @@ async function afficherMesTrajets() {
         if (isNaN(d)) return "??:??";
         return d.toTimeString().slice(0, 5); // "08:00"
       }
-      trajets.forEach(ride => {
-        const trajetDiv = document.createElement("div");
-      
-        const d = new Date(ride.date_depart);
-        const dateFormatee = !isNaN(d.getTime()) ? d.toLocaleDateString("fr-FR") : "Date inconnue";
-      
-        const heureDep = extraireHeure(ride.heure_depart);
-        const heureArr = extraireHeure(ride.heure_arrivee);
-      
-        trajetDiv.style.border = "1px solid #ccc";
-        trajetDiv.style.padding = "10px";
-        trajetDiv.style.marginBottom = "10px";
-        trajetDiv.style.borderRadius = "8px";
+     trajets.forEach(ride => {
+  const trajetDiv = document.createElement("div");
 
-        trajetDiv.dataset.id = ride.id;
-        trajetDiv.dataset.lieu_depart = ride.lieu_depart;
-        trajetDiv.dataset.lieu_arrivee = ride.lieu_arrivee;
-        trajetDiv.dataset.date_depart = ride.date_depart;
-        trajetDiv.dataset.heure_depart = ride.heure_depart;
-        trajetDiv.dataset.heure_arrivee = ride.heure_arrivee;
-        trajetDiv.dataset.nb_place = ride.nb_place;
-        trajetDiv.dataset.prix_personne = ride.prix_personne;
-        trajetDiv.dataset.energie = ride.energie;
-      
-        trajetDiv.innerHTML = `
-          <p><strong>${ride.lieu_depart}</strong> → <strong>${ride.lieu_arrivee}</strong></p>
-          <p>${dateFormatee} — ${heureDep} à ${heureArr}</p>
-          <p>${ride.nb_place} places – ${ride.prix_personne} € – ${ride.energie}</p>
-          <button class="btn-modifier"> Modifier</button>
-          <button class="btn-supprimer"> Supprimer</button>
-        `;
+  const d = new Date(ride.date_depart);
+  const dateFormatee = !isNaN(d.getTime()) ? d.toLocaleDateString("fr-FR") : "Date inconnue";
 
-        const btnStart = document.createElement("button");
-btnStart.textContent = "Démarrer";
-btnStart.addEventListener("click", () => changerStatut(ride.id, "en_cours"));
+  const heureDep = extraireHeure(ride.heure_depart);
+  const heureArr = extraireHeure(ride.heure_arrivee);
 
-const btnEnd = document.createElement("button");
-btnEnd.textContent = "Arriver";
-btnEnd.addEventListener("click", () => changerStatut(ride.id, "termine"));
+  trajetDiv.style.border = "1px solid #ccc";
+  trajetDiv.style.padding = "10px";
+  trajetDiv.style.marginBottom = "10px";
+  trajetDiv.style.borderRadius = "8px";
 
-trajetDiv.appendChild(btnStart);
-trajetDiv.appendChild(btnEnd);
- 
-        recap.appendChild(trajetDiv);
-      });   
-  
+  trajetDiv.dataset.id = ride.id;
+  trajetDiv.dataset.lieu_depart = ride.lieu_depart;
+  trajetDiv.dataset.lieu_arrivee = ride.lieu_arrivee;
+  trajetDiv.dataset.date_depart = ride.date_depart;
+  trajetDiv.dataset.heure_depart = ride.heure_depart;
+  trajetDiv.dataset.heure_arrivee = ride.heure_arrivee;
+  trajetDiv.dataset.nb_place = ride.nb_place;
+  trajetDiv.dataset.prix_personne = ride.prix_personne;
+  trajetDiv.dataset.energie = ride.energie;
+
+  // Affichage du statut si présent
+  const statut = ride.statut || "non défini";
+  let html = `
+    <p><strong>${ride.lieu_depart}</strong> → <strong>${ride.lieu_arrivee}</strong></p>
+    <p>${dateFormatee} — ${heureDep} à ${heureArr}</p>
+    <p>${ride.nb_place} places – ${ride.prix_personne} € – ${ride.energie}</p>
+    <p><strong>Statut :</strong> ${statut}</p>
+  `;
+
+  // Ajout des boutons seulement si statut non "en_cours" ou "termine"
+  if (statut !== "en_cours" && statut !== "termine") {
+    html += `
+      <button class="btn-modifier">Modifier</button>
+      <button class="btn-supprimer">Supprimer</button>
+      <button class="btn-demarrer">Démarrer</button>
+    `;
+  }
+
+  // Si en cours, afficher uniquement le bouton "Arriver"
+  if (statut === "en_cours") {
+    html += `<button class="btn-arriver">Arriver</button>`;
+  }
+
+  trajetDiv.innerHTML = html;
+  recap.appendChild(trajetDiv);
+
+  // Ajout des événements
+  const btnStart = trajetDiv.querySelector(".btn-demarrer");
+  if (btnStart) {
+    btnStart.addEventListener("click", () => changerStatut(ride.id, "en_cours"));
+  }
+
+  const btnEnd = trajetDiv.querySelector(".btn-arriver");
+  if (btnEnd) {
+    btnEnd.addEventListener("click", () => changerStatut(ride.id, "termine"));
+  }
+});
+
+
+
+
+
     } catch (err) {
       console.error(" Erreur réseau :", err);
       alert(" Erreur réseau");
