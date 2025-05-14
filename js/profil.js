@@ -52,5 +52,9 @@ setTimeout(() => {
       console.error("Erreur lors du chargement des infos utilisateur :", err);
     });
 
-}, 300);
+}, 
+
+300);
+
+
  
