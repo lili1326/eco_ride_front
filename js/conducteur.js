@@ -45,12 +45,6 @@ if (selectVoiture) {
       return;
     }
    
-
-
-
-
-
-
     console.log(" Soumission interceptée");
 
     const horaire = form.horaire.value.trim(); // exemple : "08h00/09h00"
@@ -143,7 +137,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+function changerStatut(rideId, statut) {
+  const token = getToken();
 
+  fetch(`http://localhost:8000/api/ride/${rideId}/statut`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-AUTH-TOKEN": token
+    },
+    body: JSON.stringify({ statut })
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      afficherMesTrajets(); // pour rafraîchir après changement
+    })
+    .catch(err => console.error("Erreur :", err));
+}
 
 // AFFICHER MES TRAJETS
 
@@ -211,14 +222,20 @@ async function afficherMesTrajets() {
           <button class="btn-modifier"> Modifier</button>
           <button class="btn-supprimer"> Supprimer</button>
         `;
+
+        const btnStart = document.createElement("button");
+btnStart.textContent = "Démarrer";
+btnStart.addEventListener("click", () => changerStatut(ride.id, "en_cours"));
+
+const btnEnd = document.createElement("button");
+btnEnd.textContent = "Arriver";
+btnEnd.addEventListener("click", () => changerStatut(ride.id, "termine"));
+
+trajetDiv.appendChild(btnStart);
+trajetDiv.appendChild(btnEnd);
  
         recap.appendChild(trajetDiv);
-      });
-      
-     
-        
-
-     
+      });   
   
     } catch (err) {
       console.error(" Erreur réseau :", err);
@@ -227,13 +244,10 @@ async function afficherMesTrajets() {
 
   }
   
-
-
       
   afficherMesTrajets();
 
   // Écouteur global pour tous les boutons "Supprimer"
-
 
   
      document.addEventListener("click", async (e) => {
@@ -294,7 +308,7 @@ async function afficherMesTrajets() {
   <label>Places: <input name="nb_place" type="number" value="${trajetDiv.dataset.nb_place}" /></label><br/>
   <label>Prix/personne: <input name="prix_personne" type="number" step="0.01" value="${trajetDiv.dataset.prix_personne}" /></label><br/>
   <label>Énergie: <input name="energie" value="${trajetDiv.dataset.energie}" /></label><br/>
-  <button type="submit">💾 Enregistrer</button>
+  <button type="submit"> Enregistrer</button>
 `;
           
             trajetDiv.appendChild(form);
@@ -404,7 +418,7 @@ setTimeout(() => {
         return;
       }
 
-      alert("✅ Véhicule enregistré !");
+      alert(" Véhicule enregistré !");
 
       afficherVehicules();
 
@@ -520,7 +534,7 @@ document.addEventListener("click", async (e) => {
       <label>Énergie: <input name="energie" value="${card.dataset.energie}"></label><br/>
       <label>Places: <input name="nb_places" type="number" value="${card.dataset.nb_places}"></label><br/>
       <label>Date immatriculation: <input name="date_premiere_immatriculation" type="date" value="${card.dataset.date.slice(0, 10)}"></label><br/>
-      <button type="submit">💾 Enregistrer</button>
+      <button type="submit"> Enregistrer</button>
     `;
 
     card.appendChild(form);
@@ -566,18 +580,18 @@ setTimeout(() => {
   const form = document.getElementById("preferences-form");
 
   if (!form) {
-    console.warn("❌ Formulaire 'preferences-form' introuvable.");
+    console.warn(" Formulaire 'preferences-form' introuvable.");
     return;
   }
 
-  console.log("✅ Formulaire préférence détecté");
+  console.log(" Formulaire préférence détecté");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const token = getToken();
     if (!token) {
-      alert("❌ Utilisateur non authentifié.");
+      alert(" Utilisateur non authentifié.");
       return;
     }
 
@@ -600,17 +614,17 @@ setTimeout(() => {
 
       if (!response.ok) {
         const text = await response.text();
-        console.error("❌ Erreur backend :", text);
-        alert("❌ Erreur lors de la création de la préférence.");
+        console.error(" Erreur backend :", text);
+        alert(" Erreur lors de la création de la préférence.");
         return;
       }
 
-      alert("✅ Préférence enregistrée !");
+      alert(" Préférence enregistrée !");
       afficherPreferences();
 
     } catch (err) {
-      console.error("❌ Erreur réseau :", err);
-      alert("❌ Erreur réseau ou serveur.");
+      console.error(" Erreur réseau :", err);
+      alert(" Erreur réseau ou serveur.");
     }
   });
 }, 500);
@@ -655,7 +669,7 @@ async function afficherPreferences() {
     `;
   } catch (err) {
     console.error("Erreur chargement préférences:", err);
-    recap.innerHTML = "<p>❌ Erreur réseau</p>";
+    recap.innerHTML = "<p> Erreur réseau</p>";
   }
 }
 
@@ -674,12 +688,12 @@ if (btn1) {
 document.addEventListener("click", async (e) => {
   const token = getToken();
 
-  // 🔥 SUPPRIMER
+  //  SUPPRIMER
   if (e.target.classList.contains("btn-supprimer-pref")) {
     const card = e.target.closest(".pref-card");
     const id = card.dataset.id;
 
-    if (confirm("❌ Supprimer cette préférence ?")) {
+    if (confirm(" Supprimer cette préférence ?")) {
       try {
         const response = await fetch(`http://localhost:8000/api/preference/${id}`, {
           method: "DELETE",
@@ -689,21 +703,21 @@ document.addEventListener("click", async (e) => {
         });
 
         if (response.ok) {
-          alert("🗑️ Préférence supprimée !");
+          alert(" Préférence supprimée !");
           afficherPreferences();
         } else {
           const errText = await response.text();
-          console.error("❌ Backend a renvoyé une erreur :", errText);
-          alert("❌ Erreur suppression : " + errText);
+          console.error(" Backend a renvoyé une erreur :", errText);
+          alert(" Erreur suppression : " + errText);
         }
       } catch (err) {
-        console.error("❌ Erreur réseau :", err);
-        alert("❌ Erreur réseau.");
+        console.error(" Erreur réseau :", err);
+        alert(" Erreur réseau.");
       }
     }
   }
 
-  // ✏️ MODIFIER
+  //  MODIFIER
   if (e.target.classList.contains("btn-modifier-pref")) {
     const card = e.target.closest(".pref-card");
     const id = card.dataset.id;
@@ -729,7 +743,7 @@ document.addEventListener("click", async (e) => {
       <label>Description:
         <textarea name="description">${card.dataset.description || ""}</textarea>
       </label><br/>
-      <button type="submit">💾 Enregistrer</button>
+      <button type="submit"> Enregistrer</button>
     `;
 
     card.replaceWith(form);
@@ -750,16 +764,19 @@ document.addEventListener("click", async (e) => {
         });
 
         if (res.ok) {
-          alert("✅ Préférences mises à jour !");
+          alert(" Préférences mises à jour !");
           afficherPreferences();
         } else {
           const errText = await res.text();
-          console.error("❌ Erreur modification :", errText);
-          alert("❌ Échec de la modification.");
+          console.error(" Erreur modification :", errText);
+          alert(" Échec de la modification.");
         }
       } catch (err) {
-        console.error("❌ Erreur réseau :", err);
+        console.error(" Erreur réseau :", err);
       }
     });
   }
+
 });
+
+ 
