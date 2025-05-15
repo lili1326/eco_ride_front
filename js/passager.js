@@ -1,4 +1,4 @@
- const token = getToken();
+  const token = getToken();
 console.log("Chargement des trajets…");
 async function loadParticipations() {
   const res = await fetch('http://localhost:8000/api/passager/trajets', {
