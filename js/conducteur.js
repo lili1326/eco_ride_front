@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btnVoir.addEventListener("click", afficherMesTrajets);
     }
   });
-
+// JE MODIFIE ICI 
 function changerStatut(rideId, statut) {
   const token = getToken();
 
