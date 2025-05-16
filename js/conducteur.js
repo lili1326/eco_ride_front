@@ -131,10 +131,20 @@ recap.innerHTML = `
 
 // 👉 Ecouteur de clic pour voir les trajets
 document.addEventListener("DOMContentLoaded", () => {
+
     const btnVoir = document.getElementById("btn-mes-trajets");
     if (btnVoir) {
       btnVoir.addEventListener("click", afficherMesTrajets);
     }
+    const btnVehicules = document.getElementById("btn-mes-vehicules");
+  if (btnVehicules) {
+    btnVehicules.addEventListener("click", afficherVehicules);
+  }
+
+  const btnPrefs = document.getElementById("btn-mes-preferences");
+  if (btnPrefs) {
+    btnPrefs.addEventListener("click", afficherPreferences);
+  }
   });
 // JE MODIFIE ICI 
 function changerStatut(rideId, statut) {
@@ -805,4 +815,68 @@ document.addEventListener("click", async (e) => {
 
 });
 
+
  
+
+//---------------------------AVIS--------------------------------
+async function afficherAvisRecus() {
+  console.log("➡ Exécution de afficherAvisRecus()");
+
+  const token = getToken();
+  if (!token) {
+    console.warn("⛔ Aucun token trouvé, utilisateur non connecté ?");
+    return;
+  }
+
+  const container = document.getElementById("avis-recus-container");
+  if (!container) {
+    console.warn("⛔ Élément #avis-recus-container introuvable dans le DOM.");
+    return;
+  }
+
+  container.innerHTML = "<p>Chargement des avis...</p>";
+
+  try {
+    const res = await fetch("http://localhost:8000/api/review/recus", {
+      headers: {
+        "X-AUTH-TOKEN": token
+      }
+    });
+
+    if (!res.ok) {
+      const msg = await res.text();
+      console.error("❌ Erreur API :", msg);
+      container.innerHTML = "<p>Erreur lors du chargement des avis.</p>";
+      return;
+    }
+
+    const avis = await res.json();
+
+    if (avis.length === 0) {
+      container.innerHTML = "<p>Aucun avis reçu pour le moment.</p>";
+      return;
+    }
+
+    container.innerHTML = ""; // Nettoyer avant d'afficher
+
+    avis.forEach(a => {
+      const card = document.createElement("div");
+      card.className = "avis-card";
+      card.innerHTML = `
+        <p><strong>Note :</strong> ⭐ ${a.note}/5</p>
+        <p><strong>Commentaire :</strong> ${a.commentaire}</p>
+        <p><em>De : ${a.auteur?.firstName ?? "Inconnu"}</em></p>
+        <hr>
+      `;
+      container.appendChild(card);
+    });
+  } catch (err) {
+    console.error("⚠️ Erreur réseau :", err);
+    container.innerHTML = "<p>Erreur réseau.</p>";
+  }
+}
+
+ setTimeout(() => {
+  console.log("⏳ Lancement différé de afficherAvisRecus()");
+  afficherAvisRecus();
+}, 500);

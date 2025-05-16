@@ -119,3 +119,85 @@ if (prefActive) {
   }
 })();
 
+
+
+//------------AVIS------------------------
+
+ (async () => {
+  const id = new URLSearchParams(window.location.search).get("id");
+  const token = getToken();
+
+  if (!id || !token) return;
+
+  try {
+    const res = await fetch(`http://localhost:8000/api/ride/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
+      }
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const ride = await res.json(); 
+
+     
+
+     
+    afficherAvisDuConducteur(ride.conducteur.id);
+
+  } catch (err) {
+    console.error("Erreur :", err);
+  }
+})();  
+
+async function afficherAvisDuConducteur(conducteurId) {
+  const token = getToken();
+  const container = document.getElementById("avis-recus-container");
+
+  if (!token || !container) return;
+
+  container.innerHTML = "<p>Chargement des avis...</p>";
+
+  try {
+    const res = await fetch(`http://localhost:8000/api/review/conducteur/${conducteurId}`, {
+      headers: { "X-AUTH-TOKEN": token }
+    });
+
+    if (!res.ok) {
+      const msg = await res.text();
+      console.error("Erreur chargement avis :", msg);
+      container.innerHTML = "<p>Erreur chargement des avis.</p>";
+      return;
+    }
+
+    const avis = await res.json();
+
+    if (!avis.length) {
+      container.innerHTML = "<p>Aucun avis trouvé pour ce conducteur.</p>";
+      return;
+    }
+
+    container.innerHTML = "";
+
+    avis.forEach(a => {
+      const date = new Date(a.createdAt).toLocaleDateString("fr-FR");
+      const trajet = `${a.covoiturage?.lieu_depart || "?"} → ${a.covoiturage?.lieu_arrivee || "?"}`;
+
+      const bloc = document.createElement("p");
+      bloc.innerHTML = `
+        <strong>Date :</strong> ${date} — <strong>Note :</strong> ${a.note}/5<br>
+        <strong>Trajet :</strong> ${trajet}<br>
+        <strong>Commentaire :</strong> ${a.commentaire}<br>
+        <strong>Passager :</strong> ${a.auteur?.firstName ?? "Inconnu"}<br><br>
+      `;
+      container.appendChild(bloc);
+    });
+  } catch (err) {
+    console.error("Erreur réseau :", err);
+    container.innerHTML = "<p>Erreur réseau.</p>";
+  }
+}
+
+

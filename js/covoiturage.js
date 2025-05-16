@@ -133,3 +133,7 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
       document.getElementById("messageTrajet").textContent = "Erreur lors de la recherche.";
     }
   });
+
+ 
+
+ 
