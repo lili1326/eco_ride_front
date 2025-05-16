@@ -168,111 +168,122 @@ function changerStatut(rideId, statut) {
 
 // AFFICHER MES TRAJETS
 
-async function afficherMesTrajets() {
-    const token = getToken();
-  
-    try {
-        const response = await fetch("http://localhost:8000/api/ride/mes-trajets", {
-            headers: {
-                "Content-Type": "application/json",
-              "X-AUTH-TOKEN": token
-            }
-          });
-  
-      if (!response.ok) {
-        const text = await response.text();
-        console.error(" Erreur en récupérant les trajets :", text);
-        alert(" Impossible de récupérer les trajets.");
-        return;
-      }
-  
-      const trajets = await response.json();
-      const recap = document.getElementById("recap-trajet");
-  
-      if (!trajets.length) {
-        recap.innerHTML = "<p> Aucun trajet enregistré.</p>";
-        return;
-      }
-  
-      recap.innerHTML = "<h4> Mes trajets</h4>";
-    
-      function extraireHeure(isoString) {
-        const d = new Date(isoString);
-        if (isNaN(d)) return "??:??";
-        return d.toTimeString().slice(0, 5); // "08:00"
-      }
-     trajets.forEach(ride => {
-  const trajetDiv = document.createElement("div");
+ async function afficherMesTrajets() {
+  const token = getToken();
 
-  const d = new Date(ride.date_depart);
-  const dateFormatee = !isNaN(d.getTime()) ? d.toLocaleDateString("fr-FR") : "Date inconnue";
+  try {
+    const [resTrajets, resAvis] = await Promise.all([
+      fetch("http://localhost:8000/api/ride/mes-trajets", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-AUTH-TOKEN": token
+        }
+      }),
+      fetch("http://localhost:8000/api/review/recus", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-AUTH-TOKEN": token
+        }
+      })
+    ]);
 
-  const heureDep = extraireHeure(ride.heure_depart);
-  const heureArr = extraireHeure(ride.heure_arrivee);
-
-  trajetDiv.style.border = "1px solid #ccc";
-  trajetDiv.style.padding = "10px";
-  trajetDiv.style.marginBottom = "10px";
-  trajetDiv.style.borderRadius = "8px";
-
-  trajetDiv.dataset.id = ride.id;
-  trajetDiv.dataset.lieu_depart = ride.lieu_depart;
-  trajetDiv.dataset.lieu_arrivee = ride.lieu_arrivee;
-  trajetDiv.dataset.date_depart = ride.date_depart;
-  trajetDiv.dataset.heure_depart = ride.heure_depart;
-  trajetDiv.dataset.heure_arrivee = ride.heure_arrivee;
-  trajetDiv.dataset.nb_place = ride.nb_place;
-  trajetDiv.dataset.prix_personne = ride.prix_personne;
-  trajetDiv.dataset.energie = ride.energie;
-
-  // Affichage du statut si présent
-  const statut = ride.statut || "non défini";
-  let html = `
-    <p><strong>${ride.lieu_depart}</strong> → <strong>${ride.lieu_arrivee}</strong></p>
-    <p>${dateFormatee} — ${heureDep} à ${heureArr}</p>
-    <p>${ride.nb_place} places – ${ride.prix_personne} € – ${ride.energie}</p>
-    <p><strong>Statut :</strong> ${statut}</p>
-  `;
-
-  // Ajout des boutons seulement si statut non "en_cours" ou "termine"
-  if (statut !== "en_cours" && statut !== "termine") {
-    html += `
-      <button class="btn-modifier">Modifier</button>
-      <button class="btn-supprimer">Supprimer</button>
-      <button class="btn-demarrer">Démarrer</button>
-    `;
-  }
-
-  // Si en cours, afficher uniquement le bouton "Arriver"
-  if (statut === "en_cours") {
-    html += `<button class="btn-arriver">Arriver</button>`;
-  }
-
-  trajetDiv.innerHTML = html;
-  recap.appendChild(trajetDiv);
-
-  // Ajout des événements
-  const btnStart = trajetDiv.querySelector(".btn-demarrer");
-  if (btnStart) {
-    btnStart.addEventListener("click", () => changerStatut(ride.id, "en_cours"));
-  }
-
-  const btnEnd = trajetDiv.querySelector(".btn-arriver");
-  if (btnEnd) {
-    btnEnd.addEventListener("click", () => changerStatut(ride.id, "termine"));
-  }
-});
-
-
-
-
-
-    } catch (err) {
-      console.error(" Erreur réseau :", err);
-      alert(" Erreur réseau");
+    if (!resTrajets.ok || !resAvis.ok) {
+      alert("Erreur de chargement des trajets ou des avis.");
+      return;
     }
 
+    const trajets = await resTrajets.json();
+    const avisRecus = await resAvis.json();
+
+    const avisParTrajet = new Map();
+    avisRecus.forEach(a => {
+      const rideId = a.covoiturage?.id;
+      if (!avisParTrajet.has(rideId)) avisParTrajet.set(rideId, []);
+      avisParTrajet.get(rideId).push(a);
+    });
+
+    const recap = document.getElementById("recap-trajet");
+
+    if (!trajets.length) {
+      recap.innerHTML = "<p>Aucun trajet enregistré.</p>";
+      return;
+    }
+
+    recap.innerHTML = "<h4>Mes trajets</h4>";
+
+    function extraireHeure(isoString) {
+      const d = new Date(isoString);
+      if (isNaN(d)) return "??:??";
+      return d.toTimeString().slice(0, 5);
+    }
+
+    trajets.forEach(ride => {
+      const trajetDiv = document.createElement("div");
+      trajetDiv.style.border = "1px solid #ccc";
+      trajetDiv.style.padding = "10px";
+      trajetDiv.style.marginBottom = "10px";
+      trajetDiv.style.borderRadius = "8px";
+
+      const dateFormatee = new Date(ride.date_depart).toLocaleDateString("fr-FR");
+      const heureDep = extraireHeure(ride.heure_depart);
+      const heureArr = extraireHeure(ride.heure_arrivee);
+      const statut = ride.statut || "non défini";
+
+      let html = `
+        <p><strong>${ride.lieu_depart}</strong> → <strong>${ride.lieu_arrivee}</strong></p>
+        <p>${dateFormatee} — ${heureDep} à ${heureArr}</p>
+        <p>${ride.nb_place} places – ${ride.prix_personne} € – ${ride.energie}</p>
+        <p><strong>Statut :</strong> ${statut}</p>
+      `;
+
+      if (statut !== "en_cours" && statut !== "termine") {
+        html += `
+          <button class="btn-modifier">Modifier</button>
+          <button class="btn-supprimer">Supprimer</button>
+          <button class="btn-demarrer">Démarrer</button>
+        `;
+      } else if (statut === "en_cours") {
+        html += `<button class="btn-arriver">Arriver</button>`;
+      }
+
+      trajetDiv.innerHTML = html;
+
+      // ➕ Ajout des avis pour ce trajet
+      const avisPourCeTrajet = avisParTrajet.get(ride.id) || [];
+      if (avisPourCeTrajet.length > 0) {
+        const avisDiv = document.createElement("div");
+        avisDiv.classList.add("avis-recus");
+        avisDiv.style.marginTop = "10px";
+
+        avisPourCeTrajet.forEach(a => {
+          const date = new Date(a.createdAt).toLocaleDateString("fr-FR");
+          avisDiv.innerHTML += `
+            <p><strong>Date :</strong> ${date} — <strong>Note :</strong> ${a.note}/5</p>
+            <p><strong>Commentaire :</strong> ${a.commentaire}</p>
+            <p><strong>Passager :</strong> ${a.auteur?.firstName ?? "Inconnu"}</p>
+            <hr>
+          `;
+        });
+
+        trajetDiv.appendChild(avisDiv);
+      }
+
+      recap.appendChild(trajetDiv);
+
+      // Activation des boutons
+      const btnStart = trajetDiv.querySelector(".btn-demarrer");
+      if (btnStart) btnStart.addEventListener("click", () => changerStatut(ride.id, "en_cours"));
+
+      const btnEnd = trajetDiv.querySelector(".btn-arriver");
+      if (btnEnd) btnEnd.addEventListener("click", () => changerStatut(ride.id, "termine"));
+    });
+
+  } catch (err) {
+    console.error("Erreur réseau :", err);
+    alert("Erreur de chargement.");
   }
+}
+
   
       
   afficherMesTrajets();
@@ -287,6 +298,10 @@ async function afficherMesTrajets() {
               
           const id = trajetDiv.dataset.id;
           const token = getToken();
+
+          
+
+
       
           console.log(" ID à supprimer :", id);
           console.log(" Token envoyé :", token);
@@ -818,65 +833,4 @@ document.addEventListener("click", async (e) => {
 
  
 
-//---------------------------AVIS--------------------------------
-async function afficherAvisRecus() {
-  console.log("➡ Exécution de afficherAvisRecus()");
-
-  const token = getToken();
-  if (!token) {
-    console.warn("⛔ Aucun token trouvé, utilisateur non connecté ?");
-    return;
-  }
-
-  const container = document.getElementById("avis-recus-container");
-  if (!container) {
-    console.warn("⛔ Élément #avis-recus-container introuvable dans le DOM.");
-    return;
-  }
-
-  container.innerHTML = "<p>Chargement des avis...</p>";
-
-  try {
-    const res = await fetch("http://localhost:8000/api/review/recus", {
-      headers: {
-        "X-AUTH-TOKEN": token
-      }
-    });
-
-    if (!res.ok) {
-      const msg = await res.text();
-      console.error("❌ Erreur API :", msg);
-      container.innerHTML = "<p>Erreur lors du chargement des avis.</p>";
-      return;
-    }
-
-    const avis = await res.json();
-
-    if (avis.length === 0) {
-      container.innerHTML = "<p>Aucun avis reçu pour le moment.</p>";
-      return;
-    }
-
-    container.innerHTML = ""; // Nettoyer avant d'afficher
-
-    avis.forEach(a => {
-      const card = document.createElement("div");
-      card.className = "avis-card";
-      card.innerHTML = `
-        <p><strong>Note :</strong> ⭐ ${a.note}/5</p>
-        <p><strong>Commentaire :</strong> ${a.commentaire}</p>
-        <p><em>De : ${a.auteur?.firstName ?? "Inconnu"}</em></p>
-        <hr>
-      `;
-      container.appendChild(card);
-    });
-  } catch (err) {
-    console.error("⚠️ Erreur réseau :", err);
-    container.innerHTML = "<p>Erreur réseau.</p>";
-  }
-}
-
- setTimeout(() => {
-  console.log("⏳ Lancement différé de afficherAvisRecus()");
-  afficherAvisRecus();
-}, 500);
+ 
