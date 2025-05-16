@@ -3,8 +3,6 @@ import { getToken } from "./auth/auth.js";
 console.log(" Script vueDetaileeCovoiturage.js chargé");
 
 
- 
-
 (async () => {
   const id = new URLSearchParams(window.location.search).get("id");
   const token = getToken();
@@ -99,13 +97,19 @@ document.getElementById("car-modele").textContent = ride.voiture?.modele || "Inc
 document.getElementById("car-energie").textContent = ride.voiture?.energie || "Inconnue";
 
 //  PRÉFÉRENCES CONDUCTEUR
-const prefList = document.getElementById("preferences-list");
-if (ride.conducteur?.preferences?.length > 0) {
-  prefList.innerHTML = ride.conducteur.preferences
-    .map(p => `• ${p.description}`)
-    .join("<br>");
+ const prefList = document.getElementById("preferences-list");
+const prefActive = localStorage.getItem("preference_active");
+
+if (prefActive) {
+  const p = JSON.parse(prefActive);
+  prefList.innerHTML = `
+    <p>Fumeur : ${p.fumeur}</p>
+    <p>Animaux : ${p.animaux}</p>
+    <p>Musique : ${p.musique}</p>
+    <p>Description : ${p.description}</p>
+  `;
 } else {
-  prefList.textContent = "Aucune préférence renseignée.";
+  prefList.textContent = "Aucune préférence active.";
 }
 
 } catch (err) {
@@ -114,3 +118,4 @@ if (ride.conducteur?.preferences?.length > 0) {
     if (detail) detail.innerHTML = " Erreur de chargement.";
   }
 })();
+

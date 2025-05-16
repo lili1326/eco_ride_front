@@ -649,6 +649,9 @@ setTimeout(() => {
   });
 }, 500);
 
+ 
+
+
 // Affichage des préférences (structure identique à afficherVehicules)
 async function afficherPreferences() {
   const token = getToken();
@@ -669,8 +672,11 @@ async function afficherPreferences() {
       return;
     }
 
+   
+
     const pref = await res.json();
 
+localStorage.setItem("preference_active", JSON.stringify(pref));
     recap.innerHTML += `
       <div class="pref-card"
            data-id="${pref.id}"
