@@ -77,7 +77,7 @@ window.onpopstate = LoadContentPage;
 window.route = function (e) {
  e.preventDefault();
   const url = e.currentTarget.dataset.url;
-  console.log("🧭 Redirection vers :", url);
+  console.log(" Redirection vers :", url);
   if (url) {
     window.history.pushState({}, "", url);
     LoadContentPage();
@@ -87,3 +87,4 @@ window.route = function (e) {
 
 // Chargement du contenu de la page au chargement initial
 LoadContentPage();
+

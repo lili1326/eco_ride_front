@@ -1,4 +1,5 @@
 import { setToken, getToken } from "./auth.js"; 
+import { setAdminToken } from "./auth.admin.js";
 
 const pseudoInput = document.getElementById("PseudoInput");
 const mailInput =document.getElementById("EmailInput");
@@ -37,11 +38,11 @@ const loginUrl = role === 'admin'
 
         if (response.ok) {
             // Connexion réussie
-            const token = result.apiToken;
+ const token = result.token ?? result.apiToken;
             const roles = result.roles;
 
             //  Stocker le token avec ta fonction centralisée
-            setToken(token);
+           // setToken(token);
         
             //  Extraire un rôle utile (ex: client, admin)
             let mainRole = roles.find(r => r !== 'ROLE_USER') || 'client'; // fallback client
@@ -50,17 +51,19 @@ const loginUrl = role === 'admin'
         
             //   stocke le rôle dans localStorage
 localStorage.setItem("user_role", mainRole);
-console.log(" Rôle stocké :", mainRole);
+ 
 
             //  Stocker le rôle en cookie
             setCookie(RoleCookieName, mainRole.toLowerCase(), 7);
             showAndHideElementsForRoles();
         
-            //  Rediriger
 
-            if (mainRole === "admin") {
+            //
+   if (mainRole === "admin") {
+  setAdminToken(token);        // ✅ stocke sous admin_token
   window.location.replace("/admin-dashboard");
 } else {
+  setToken(token);
   window.location.replace("/account");
 }
 
