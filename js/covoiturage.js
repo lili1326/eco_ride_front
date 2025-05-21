@@ -114,6 +114,7 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
         card.innerHTML = `
           <div class="profile">
             <h3>${ride.conducteur?.pseudo || "Conducteur"}</h3>
+            <p class="note-conducteur">Note conducteur : chargement...</p>
             <img src="/assets/images/avatar.png" width="70px" alt="Avatar">
           </div>
           <p>${ride.lieu_depart} → ${ride.lieu_arrivee}</p>

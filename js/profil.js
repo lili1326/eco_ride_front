@@ -26,6 +26,26 @@ setTimeout(() => {
   })
     .then(res => res.json())
     .then(user => {
+      const noteMoyenneEl = document.getElementById("note-moyenne");
+if (noteMoyenneEl) {
+  fetch(`http://localhost:8000/api/review/conducteur/${user.id}/moyenne`, {
+    headers: {
+      "X-AUTH-TOKEN": token
+    }
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Erreur de réponse " + res.status);
+      return res.json();
+    })
+    .then(data => {
+      const note = data.note_moyenne !== null ? data.note_moyenne.toFixed(1) : "Non noté";
+      noteMoyenneEl.textContent = `Note moyenne conducteur : ${note}`;
+    })
+    .catch(err => {
+      console.error("Erreur lors de la récupération de la note moyenne :", err);
+      noteMoyenneEl.textContent = "Note moyenne : indisponible";
+    });
+}
       console.log("🔍 Utilisateur reçu :", user);
       prenomEl.textContent = user.firstName || "inconnu";
       pseudoEl.textContent = user.pseudo || "inconnu";
