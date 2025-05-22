@@ -18,8 +18,8 @@ btnSingin.addEventListener("click", checkCredentials);//information de connectio
 
 const role = document.querySelector('input[name="role"]:checked').value;
 const loginUrl = role === 'admin'
-  ? " ${API_URL}/api/admin/login"
-  : " ${API_URL}/api/login";
+    ? `${API_URL}/api/admin/login`
+  : `${API_URL}/api/login`;
 
     const payload = {
         username: mailInput.value,
