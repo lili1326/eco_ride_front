@@ -1,5 +1,5 @@
   
-
+ 
  
  //stocker en cookie notre token
 const tokenCookieName = "accesstoken";

@@ -1,5 +1,6 @@
 
 import { getToken } from "./auth/auth.js";
+import { API_URL } from "./config.js";
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("btn-details")) {
@@ -70,7 +71,7 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
  filterContainer.style.display = "none";
  resultsContainer.style.display = "none";
 
-    const url = new URL("http://localhost:8000/api/ride/public/rides");
+    const url = new URL( `${API_URL}/api/ride/public/rides`);
     if (depart) url.searchParams.append("depart", depart);
     if (arrivee) url.searchParams.append("arrivee", arrivee);
     if (date) url.searchParams.append("date", date);

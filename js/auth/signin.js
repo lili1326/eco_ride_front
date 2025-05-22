@@ -1,5 +1,6 @@
 import { setToken, getToken } from "./auth.js"; 
 import { setAdminToken } from "./auth.admin.js";
+import { API_URL } from "../config.js";
 
 const pseudoInput = document.getElementById("PseudoInput");
 const mailInput =document.getElementById("EmailInput");
@@ -17,8 +18,8 @@ btnSingin.addEventListener("click", checkCredentials);//information de connectio
 
 const role = document.querySelector('input[name="role"]:checked').value;
 const loginUrl = role === 'admin'
-  ? "http://localhost:8000/api/admin/login"
-  : "http://localhost:8000/api/login";
+  ? " ${API_URL}/api/admin/login"
+  : " ${API_URL}/api/login";
 
     const payload = {
         username: mailInput.value,
@@ -60,7 +61,7 @@ localStorage.setItem("user_role", mainRole);
 
             //
    if (mainRole === "admin") {
-  setAdminToken(token);        // ✅ stocke sous admin_token
+  setAdminToken(token);        //  stocke sous admin_token
   window.location.replace("/admin-dashboard");
 } else {
   setToken(token);
@@ -79,7 +80,7 @@ localStorage.setItem("user_role", mainRole);
     }
 }
 //Accéder ensuite à une route sécurisée avec le token
-fetch("http://localhost:8000/api/account/me", {
+fetch(`${API_URL}/api/account/me`, {
   method: "GET",
   headers: {
       "Content-Type": "application/json",
@@ -95,7 +96,7 @@ fetch("http://localhost:8000/api/account/me", {
 const userToken = getToken();
 
 if (userToken) {
-    fetch("http://localhost:8000/api/account/me", {
+    fetch( `${API_URL}/api/account/me`, {
         headers: {
             "X-AUTH-TOKEN": userToken
         }

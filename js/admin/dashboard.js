@@ -1,6 +1,6 @@
   
  import { getAdminToken } from '../auth/auth.admin.js';
- 
+ import { API_URL } from "../config.js";
 
 const token = getAdminToken();
 
@@ -9,7 +9,7 @@ if (!token) {
     window.location.href = "/signin"; // redirection sécurisée
 }
  async function loadRidesChart() {
-    const response = await fetch( 'http://localhost:8000/api/admin/dashboard/rides-per-day', {
+    const response = await fetch( `${API_URL}/api/admin/dashboard/rides-per-day`, {
         headers: {
             'X-AUTH-TOKEN': token
         }
@@ -42,7 +42,7 @@ if (!token) {
 }
 
  async function loadCreditsChart() {
-    const response = await fetch( 'http://localhost:8000/api/admin/dashboard/credits-per-day' , {
+    const response = await fetch( `${API_URL}/api/admin/dashboard/credits-per-day` , {
         headers: {
             'X-AUTH-TOKEN': token
         }

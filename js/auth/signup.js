@@ -1,4 +1,5 @@
- 
+ import { API_URL } from "../config.js";
+
 //Implémenter le JS de ma page
 
 const inputPseudo = document.getElementById("PseudoInput");
@@ -106,7 +107,7 @@ btnValidation.addEventListener("click", async (e) => {
     };
 
     try {
-        const response = await fetch("http://localhost:8000/api/registration", {
+        const response = await fetch( `${API_URL}/api/registration`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -1,7 +1,8 @@
 import { getToken } from "./auth/auth.js";
+ import { API_URL } from "./config.js";
 
 console.log(" Script vueDetaileeCovoiturage.js chargé");
-
+ 
 
 (async () => {
   const id = new URLSearchParams(window.location.search).get("id");
@@ -17,7 +18,7 @@ console.log(" Script vueDetaileeCovoiturage.js chargé");
   }
 
   try {
-    const res = await fetch(`http://localhost:8000/api/ride/${id}`, {
+    const res = await fetch(`${API_URL}/api/ride/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,7 @@ console.log(" Script vueDetaileeCovoiturage.js chargé");
 if (participerBtn) {
   participerBtn.addEventListener("click", async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/participate", {
+      const res = await fetch(`${API_URL}/api/participate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -130,7 +131,7 @@ if (prefActive) {
   if (!id || !token) return;
 
   try {
-    const res = await fetch(`http://localhost:8000/api/ride/${id}`, {
+    const res = await fetch(`${API_URL}/api/ride/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -161,7 +162,7 @@ async function afficherAvisDuConducteur(conducteurId) {
   container.innerHTML = "<p>Chargement des avis...</p>";
 
   try {
-    const res = await fetch(`http://localhost:8000/api/review/conducteur/${conducteurId}`, {
+    const res = await fetch(`${API_URL}/api/review/conducteur/${conducteurId}`, {
       headers: { "X-AUTH-TOKEN": token }
     });
 

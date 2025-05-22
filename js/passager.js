@@ -1,13 +1,16 @@
+  import { API_URL } from "./config.js";
+  
+  
   const token = getToken();
 console.log("Chargement des trajets…");
  
  async function loadParticipations() {
-  const res = await fetch('http://localhost:8000/api/passager/trajets', {
+  const res = await fetch(`${API_URL}/api/passager/trajets`, {
     headers: { 'X-AUTH-TOKEN': token }
   });
 
   const trajets = await res.json();
-  const avis = await fetchAvis(); // ✅ On récupère tous les avis de l'utilisateur
+  const avis = await fetchAvis(); //  On récupère tous les avis de l'utilisateur
 
   const avisMap = new Map(); // key = rideId, value = review
   avis.forEach(r => {
@@ -90,7 +93,7 @@ console.log("Chargement des trajets…");
     console.log("Data envoyée :", data);
 
     try {
-      const res = await fetch("http://localhost:8000/api/review", {
+      const res = await fetch(`${API_URL}/api/review`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -134,7 +137,7 @@ loadParticipations();
 
 
 async function fetchAvis() {
-  const res = await fetch("http://localhost:8000/api/review/mes-avis", {
+  const res = await fetch(`${API_URL}/api/review/mes-avis`, {
     headers: { 'X-AUTH-TOKEN': token }
   });
 

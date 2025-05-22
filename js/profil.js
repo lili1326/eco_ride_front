@@ -1,4 +1,5 @@
 import { getToken } from "./auth/auth.js";
+import { API_URL } from "./config.js";
 
 console.log("profil.js chargé");
 
@@ -19,7 +20,7 @@ setTimeout(() => {
     return;
   }
 
-  fetch("http://localhost:8000/api/account/me", {
+  fetch(`${API_URL}/api/account/me`, {
     headers: {
       "X-AUTH-TOKEN": token
     }
@@ -28,7 +29,7 @@ setTimeout(() => {
     .then(user => {
       const noteMoyenneEl = document.getElementById("note-moyenne");
 if (noteMoyenneEl) {
-  fetch(`http://localhost:8000/api/review/conducteur/${user.id}/moyenne`, {
+  fetch(` ${API_URL}/api/review/conducteur/${user.id}/moyenne`, {
     headers: {
       "X-AUTH-TOKEN": token
     }
@@ -53,7 +54,7 @@ if (noteMoyenneEl) {
 
       //  On récupère maintenant le solde
       if (soldeEl) {
-        fetch("http://localhost:8000/api/wallet", {
+        fetch(`${API_URL}/api/wallet`, {
           headers: {
             "X-AUTH-TOKEN": token
           }
