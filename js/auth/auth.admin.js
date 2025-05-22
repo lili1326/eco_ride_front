@@ -15,6 +15,6 @@ export function isConnected() {
 export function logoutAdmin() {
     localStorage.removeItem("admin_token");
     document.cookie = "admin_role=; Max-Age=0";
-    window.location.href = "/admin/signin";  
+    window.location.href = "/signin";  
 }
  
