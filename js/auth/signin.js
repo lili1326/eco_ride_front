@@ -65,7 +65,7 @@ localStorage.setItem("user_role", mainRole);
   window.location.replace("/admin-dashboard");
 } else {
   setToken(token);
-  window.location.replace("/account");
+  window.location.replace("/");
 }
 
 
