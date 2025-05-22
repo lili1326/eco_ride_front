@@ -30,7 +30,12 @@ console.log("👤 Rôle localStorage :", localStorage.getItem("user_role"));
     window.history.replaceState({}, "", "/");
     actualRoute = getRouteByUrl("/");
   }
-  
+  //  Cas spécifique : route "disconnected" (signin), mais user déjà connecté
+if (actualRoute.authorize?.includes("disconnected") && isConnected()) {
+  console.warn("Déjà connecté, redirection vers accueil");
+  window.location.replace("/"); // ou /account
+  return;
+}
 
   //  Vérification des autorisations
   const allRolesArray = actualRoute.authorize;
