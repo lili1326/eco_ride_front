@@ -7,8 +7,11 @@ export function setAdminToken(token) {
 export function getAdminToken() {
     return localStorage.getItem("admin_token");
 }
-
-// 3. Déconnexion admin
+ // 3. Vérification de la connexion
+export function isConnected() {
+  return !!localStorage.getItem("admin_token");
+}
+// 4. Déconnexion admin
 export function logoutAdmin() {
     localStorage.removeItem("admin_token");
     document.cookie = "admin_role=; Max-Age=0";

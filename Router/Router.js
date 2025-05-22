@@ -20,11 +20,16 @@ const LoadContentPage = async () => {
   let actualRoute = getRouteByUrl(path);
 
   //  Si route non trouvée → forcer la home
-  if (!actualRoute) {
-    console.warn("Route inconnue, redirection vers /");
-    window.history.replaceState({}, "", "/");
-    actualRoute = getRouteByUrl("/");
-  }
+ // if (!actualRoute) {
+  //  console.warn("Route inconnue, redirection vers /");
+  //  window.history.replaceState({}, "", "/");
+   // actualRoute = getRouteByUrl("/");
+ // }
+ // Si la route est inconnue OU interdite alors qu'on n'est pas connecté → aller à /
+if (!actualRoute || (actualRoute.authorize.includes("disconnected") && isConnected())) {
+  window.history.replaceState({}, "", "/");
+  actualRoute = getRouteByUrl("/");
+}
 
   //  Vérification des autorisations
   const allRolesArray = actualRoute.authorize;

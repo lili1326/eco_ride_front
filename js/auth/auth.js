@@ -10,7 +10,11 @@ export function setToken(token) {
     return localStorage.getItem("api_token");
   }
   
-// 3. Déconnexion : suppression du token
+  // 3. Vérification de la connexion
+export function isConnected() {
+  return !!localStorage.getItem("api_token");
+}
+// 4. Déconnexion : suppression du token
   export function logout() {
     localStorage.removeItem("api_token");
     document.cookie = "user_role=; Max-Age=0";
