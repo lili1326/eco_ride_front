@@ -11,7 +11,7 @@ setTimeout(() => {
 // Charger les véhicules dans le <select>
 const selectVoiture = document.getElementById("voiture");
 if (selectVoiture) {
-  fetch( `${API_URL}/api/car/mes-vehicules`, {
+  fetch(`${API_URL}/api/car/mes-vehicules`, {
     headers: { "X-AUTH-TOKEN": getToken() }
   })
     .then(res => res.json())
@@ -73,7 +73,7 @@ if (selectVoiture) {
     console.log("📦 Données à envoyer :", data);
 
     try {
-      const response = await fetch( `${API_URL}/api/ride`, {
+      const response = await fetch(`${API_URL}/api/ride`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -173,13 +173,13 @@ function changerStatut(rideId, statut) {
 
   try {
     const [resTrajets, resAvis] = await Promise.all([
-      fetch( `${API_URL}/api/ride/mes-trajets`, {
+      fetch(`${API_URL}/api/ride/mes-trajets`, {
         headers: {
           "Content-Type": "application/json",
           "X-AUTH-TOKEN": token
         }
       }),
-      fetch(" ${API_URL}/api/review/recus", {
+      fetch(`${API_URL}/api/review/recus`, {
         headers: {
           "Content-Type": "application/json",
           "X-AUTH-TOKEN": token
@@ -307,7 +307,7 @@ function changerStatut(rideId, statut) {
           console.log(" Token envoyé :", token);
       
           try {
-            const response = await fetch(` ${API_URL}/api/ride/${id}`, {
+            const response = await fetch(`${API_URL}/api/ride/${id}`, {
               method: "DELETE",
               headers: {
                 "X-AUTH-TOKEN": token
@@ -385,7 +385,7 @@ function changerStatut(rideId, statut) {
               console.log(" Données envoyées au backend :", updated);
           
               try {
-                const res = await fetch(` ${API_URL}/api/ride/${id}`, {
+                const res = await fetch(`${API_URL}/api/ride/${id}`, {
                   method: "PUT",
                   headers: {
                     "Content-Type": "application/json",
@@ -539,7 +539,7 @@ document.addEventListener("click", async (e) => {
 
     if (confirm(" Supprimer ce véhicule ?")) {
       try {
-        const response = await fetch(` ${API_URL}/api/car/${id}`, {
+        const response = await fetch(`${API_URL}/api/car/${id}`, {
           method: "DELETE",
           headers: {
             "X-AUTH-TOKEN": token
@@ -591,7 +591,7 @@ document.addEventListener("click", async (e) => {
       updated.nb_places = parseInt(updated.nb_places);
 
       try {
-        const res = await fetch(` ${API_URL}/api/car/${id}`, {
+        const res = await fetch(`${API_URL}/api/car/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -685,7 +685,7 @@ async function afficherPreferences() {
 
   recap.innerHTML = "";
   try {
-    const res = await fetch( `${API_URL}/api/preference/me`, {
+    const res = await fetch(`${API_URL}/api/preference/me`, {
       headers: {
         "Content-Type": "application/json",
         "X-AUTH-TOKEN": token
@@ -746,7 +746,7 @@ document.addEventListener("click", async (e) => {
 
     if (confirm(" Supprimer cette préférence ?")) {
       try {
-        const response = await fetch(` ${API_URL}/api/preference/${id}`, {
+        const response = await fetch(`${API_URL}/api/preference/${id}`, {
           method: "DELETE",
           headers: {
             "X-AUTH-TOKEN": token
@@ -805,7 +805,7 @@ document.addEventListener("click", async (e) => {
       const updated = Object.fromEntries(formData.entries());
 
       try {
-        const res = await fetch(` ${API_URL}/api/preference/${id}`, {
+        const res = await fetch(`${API_URL}/api/preference/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
