@@ -17,11 +17,16 @@ const getRouteByUrl = (url) => {
 // Chargement d'une page
 const LoadContentPage = async () => {
   const path = window.location.pathname;
+  console.log(" Path demandé :", path);
   let actualRoute = getRouteByUrl(path);
+  console.log(" Route trouvée :", actualRoute);
+
+  console.log(" Token localStorage :", localStorage.getItem("api_token"));
+console.log("👤 Rôle localStorage :", localStorage.getItem("user_role"));
 
   //  Si route non trouvée → forcer la home
   if (!actualRoute) {
-    //console.warn("Route inconnue, redirection vers /");
+    console.warn("Route inconnue, redirection vers /");
     window.history.replaceState({}, "", "/");
     actualRoute = getRouteByUrl("/");
   }
