@@ -15,47 +15,63 @@ const getRouteByUrl = (url) => {
   return route || route404;
 };
 
+//  pour éviter d’être considéré "connecté" si un vieux token traîne
+if (!window.location.pathname.includes("/signin")) {
+  localStorage.removeItem("api_token");
+  localStorage.removeItem("admin_token");
+  localStorage.removeItem("user_role");
+}
+
+// Fonction pour charger le contenu de la page
 const LoadContentPage = async () => {
   const path = window.location.pathname;
+  // Récupération de l'URL actuelle
   const actualRoute = getRouteByUrl(path);
+  // Récupération du contenu HTML de la route
 
-  const authorizedRoles = actualRoute.authorize;
-
-  // Si la page est protégée
-  if (authorizedRoles.length > 0) {
-    const role = getRole(); // admin, client, null
-
-    // Si la page est réservée aux déconnectés
-    if (authorizedRoles.includes("disconnected")) {
-      if (isConnected()) {
-        return window.location.replace("/"); // redirige vers accueil
+  // Vérifier les droits d'accès à la page
+  const allRolesArray = actualRoute.authorize;
+  if(allRolesArray.length > 0){
+    if(allRolesArray.includes("disconnected")){
+      // Si déjà connecté et essaie d’aller sur signin ou signup => rediriger
+      if(isConnected()){
+        window.location.replace("/");
       }
     }
-
-    // Si la page est réservée à un rôle spécifique
-    else if (!authorizedRoles.includes(role)) {
-      return window.location.replace("/signin"); // redirige vers login
+    else{
+      const roleUser = getRole();
+      if(!allRolesArray.includes(roleUser)){
+        // Ne rediriger que si ce n’est PAS la page d’accueil
+      if (actualRoute.url !== "/") {
+        window.location.replace("/");
+         return;
+      }
     }
-  }
+  }}
 
-  // Chargement du HTML de la route
-  const html = await fetch(actualRoute.pathHtml).then((res) => res.text());
+  const html = await fetch(actualRoute.pathHtml).then((data) => data.text());
+  // Ajout du contenu HTML à l'élément avec l'ID "main-page"
   document.getElementById("main-page").innerHTML = html;
 
-  // Chargement du JS associé
-  if (actualRoute.pathJS !== "") {
-    const scriptTag = document.createElement("script");
-    scriptTag.setAttribute("type", "module");
+  // Ajout du contenu JavaScript
+  if (actualRoute.pathJS != "") {
+    // Création d'une balise script
+    let scriptTag = document.createElement("script");
+    scriptTag.setAttribute("type", "module"); // obligatoire pour utiliser import/export
     scriptTag.setAttribute("src", actualRoute.pathJS);
+
+    // Ajout de la balise script au corps du document
     document.querySelector("body").appendChild(scriptTag);
   }
 
-  // Mise à jour du titre de la page
-  document.title = `${actualRoute.title} - ${websiteName}`;
+  // Changement du titre de la page
+  document.title = actualRoute.title + " - " + websiteName;
 
-  // Mise à jour des éléments en fonction du rôle
+  // Afficher et masquer les éléments en fonction du rôle
   showAndHideElementsForRoles();
 };
+ 
+ 
 
 
 // Fonction pour gérer les événements de routage (clic sur les liens)
