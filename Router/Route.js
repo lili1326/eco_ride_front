@@ -1,3 +1,4 @@
+//Route.js
 export default class Route {
     constructor(url, title, pathHtml,authorize, pathJS = "") {
       this.url = url;
