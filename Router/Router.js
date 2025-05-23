@@ -26,6 +26,7 @@ const LoadContentPage = async () => {
   const allRolesArray = actualRoute.authorize;
   if(allRolesArray.length > 0){
     if(allRolesArray.includes("disconnected")){
+      // Si déjà connecté et essaie d’aller sur signin ou signup => rediriger
       if(isConnected()){
         window.location.replace("/");
       }
@@ -33,7 +34,10 @@ const LoadContentPage = async () => {
     else{
       const roleUser = getRole();
       if(!allRolesArray.includes(roleUser)){
+        // Ne rediriger que si ce n’est PAS la page d’accueil
+      if (actualRoute.url !== "/") {
         window.location.replace("/");
+         return;
       }
     }
   }
