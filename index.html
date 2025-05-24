@@ -24,16 +24,16 @@
                 <a class="nav-link" href="/" >Acceuil</a>
               </li>
               <li class="nav-item "  >
-                <a class="nav-link" href="/covoiturage" >Covoiturage</a>
+                 <a class="nav-link" href="/covoiturage" data-url="/covoiturage" onclick="window.route(event)">Covoiturage</a>
               </li>
                <li class="nav-item">
-                <a class="nav-link" href="/contact">Contact</a>
+                 <a class="nav-link" href="/contact" data-url="/contact" onclick="window.route(event)">Contact</a>
               </li>
               <li class="nav-item" data-show="disconnected">
-                <a class="nav-link" href="/signin">Connection</a>
+                 <a class="nav-link" href="/signin" data-url="/signin" onclick="window.route(event)">Connexion</a>
               </li>
               <li class="nav-item" data-show="connected">
-                <a class="nav-link" href="/account">Mon compte</a>
+                  <a class="nav-link" href="/account" data-url="/account" onclick="window.route(event)">Mon compte</a>
               </li>
               <li class="nav-item"data-show="connected">
                 <a href="#" class="nav-link" id="signout-btn">Déconnection</a>
@@ -71,7 +71,7 @@
  <script type="module" src="./Router/router.js"></script>
  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
- <script type="module" src="/js/admin/dashboard.js"></script>
+ 
 </body>
 </html>
 

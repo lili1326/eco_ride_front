@@ -1,13 +1,11 @@
 
- // Déconnexion automatique si ce n'est pas la page de connexion
-const path = window.location.pathname;
-
-if (!path.includes("/signin") && !path.includes("/signinup")) {
-  localStorage.removeItem("api_token");
-  localStorage.removeItem("admin_token");
-  localStorage.removeItem("user_role");
-}
-
+ // Ne forcer la déconnexion qu'une seule fois au tout début du site
+//if (!sessionStorage.getItem("hasForcedLogout")) {
+//  localStorage.removeItem("api_token");
+ // localStorage.removeItem("admin_token");
+ // localStorage.removeItem("user_role");
+ // sessionStorage.setItem("hasForcedLogout", "true");
+//}
 
 
 import Route from "./Route.js";
@@ -87,6 +85,8 @@ const routeEvent = (event) => {
   LoadContentPage();
 };
 
+
+
 // Gestion de l'événement de retour en arrière dans l'historique du navigateur
 window.onpopstate = LoadContentPage;
 // Assignation de la fonction routeEvent à la propriété route de la fenêtre
@@ -100,6 +100,8 @@ window.route = function (e) {
     LoadContentPage();
   }
 };
+
+
 
 
 // Chargement du contenu de la page au chargement initial

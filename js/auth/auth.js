@@ -1,27 +1,18 @@
  // auth.js
 
+  // 1. Sauvegarde du token dans localStorage
 export function setToken(token) {
-  localStorage.setItem("api_token", token);
-}
+    localStorage.setItem("api_token",token);  
+  }
 
-export function getToken() {
-  return localStorage.getItem("api_token");
-}
-
-export function isConnected() {
-  return !!localStorage.getItem("api_token");
-}
-
-export function logout() {
-  localStorage.removeItem("api_token");
-  localStorage.removeItem("user_role");
-  window.location.href = "/signin";
-}
-
-export function getRole() {
-  return localStorage.getItem("user_role");
-}
-
-export function setRole(role) {
-  localStorage.setItem("user_role", role);
-}
+  // 2. Récupération du token pour l'utiliser (ex: requêtes API)
+  export function getToken() {
+    return localStorage.getItem("api_token");
+  }
+ 
+// 3. Déconnexion : suppression du token
+  export function logout() {
+    localStorage.removeItem("api_token");
+    document.cookie = "user_role=; Max-Age=0";
+    window.location.href = "/signin";
+  }
