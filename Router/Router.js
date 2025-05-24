@@ -46,19 +46,22 @@ const LoadContentPage = async () => {
 const allRolesArray = actualRoute.authorize;
 const roleUser = getRole();
 
-if (allRolesArray.length > 0) {
+ if (allRolesArray.length > 0) {
   if (allRolesArray.includes("disconnected") && isConnected()) {
-     
-    window.location.replace("/");
-    return;
+    // Ne pas rester sur /signin si connecté
+    if (window.location.pathname !== "/") {
+      window.location.replace("/");
+      return;
+    }
   }
 
-  if (!allRolesArray.includes(roleUser)) {
-    // Si la route est protégée par un rôle et que l'utilisateur n'a pas ce rôle
+  if (!allRolesArray.includes(getRole()) && !allRolesArray.includes("disconnected")) {
+    // Accès refusé pour ce rôle
     window.location.replace("/");
     return;
   }
-} 
+}
+
   const html = await fetch(actualRoute.pathHtml).then((data) => data.text());
   // Ajout du contenu HTML à l'élément avec l'ID "main-page"
   document.getElementById("main-page").innerHTML = html;
@@ -115,3 +118,4 @@ window.route = function (e) {
 
 // Chargement du contenu de la page au chargement initial
 LoadContentPage();
+ 

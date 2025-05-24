@@ -84,13 +84,13 @@ function setToken(token){
 //}
 
 function getToken() {
-  return localStorage.getItem("api_token"); 
+    return localStorage.getItem("api_token") || getCookie(tokenCookieName);
 }
 
 
 //si nous sommes connectés ou non.
  function isConnected() {
-  const token = localStorage.getItem("api_token");
+    const token = getToken();
   return token !== null && token !== "";
 }
 
@@ -105,6 +105,7 @@ connected (admid ou client)
 */
 
  function showAndHideElementsForRoles(){
+ 
     const userConnected = isConnected();
     const role = getRole();
 
@@ -178,3 +179,5 @@ function getInfosUser(){
         console.error("erreur lors de la récupération des données utilisateur", error);
     });
 }
+
+ 

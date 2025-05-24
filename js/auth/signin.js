@@ -1,6 +1,7 @@
 import { setToken, getToken } from "./auth.js"; 
 import { setAdminToken } from "./auth.admin.js";
 import { API_URL } from "../config.js";
+ 
  const pseudoInput = document.getElementById("PseudoInput");
 const mailInput =document.getElementById("EmailInput");
 const passwordInput = document.getElementById("PasswordInput");
@@ -13,12 +14,11 @@ btnSingin.addEventListener("click", checkCredentials);//information de connectio
 
 
 
-   async function checkCredentials() {
-
+async function checkCredentials() {
 const role = document.querySelector('input[name="role"]:checked').value;
 const loginUrl = role === 'admin'
     ? `${API_URL}/api/admin/login`
-  : `${API_URL}/api/login`;
+    : `${API_URL}/api/login`;
 
     const payload = {
         username: mailInput.value,
@@ -37,36 +37,40 @@ const loginUrl = role === 'admin'
         const result = await response.json();
 
         if (response.ok) {
-            // Connexion réussie
- const token = result.token ?? result.apiToken;
-            const roles = result.roles;
+// Connexion réussie
+          const token = result.token ?? result.apiToken;
+          const roles = result.roles;
 
-            //  Stocker le token avec ta fonction centralisée
-           // setToken(token);
+//  Stocker le token avec ta fonction centralisée
+         setToken(token);
         
-            //  Extraire un rôle utile (ex: client, admin)
-            let mainRole = roles.find(r => r !== 'ROLE_USER') || 'client'; // fallback client
+// Extraire un rôle utile (ex: client, admin)
+         let mainRole = roles.find(r => r !== 'ROLE_USER') || 'client'; // fallback client
 
-            mainRole = mainRole.replace('ROLE_', '').toLowerCase();
+         mainRole = mainRole.replace('ROLE_', '').toLowerCase();
         
-            //   stocke le rôle dans localStorage
-localStorage.setItem("user_role", mainRole);
+//stocke le rôle dans localStorage
+        localStorage.setItem("user_role", mainRole);
  
 
-            //  Stocker le rôle en cookie
-            setCookie(RoleCookieName, mainRole.toLowerCase(), 7);
-            showAndHideElementsForRoles();
-        
+ //  Stocker le rôle en cookie
 
-            //
+         setCookie(RoleCookieName, mainRole.toLowerCase(), 7);
+         showAndHideElementsForRoles();
+         console.log("🎫 token =", token);
+console.log("👤 role =", mainRole);
+            
    if (mainRole === "admin") {
   setAdminToken(token);        //  stocke sous admin_token
-  window.location.replace("/admin-dashboard");
+    window.history.pushState({}, "", " /admin-dashboard");
+window.dispatchEvent(new PopStateEvent("popstate"));
+ // window.location.replace("/admin-dashboard");
 } else {
   setToken(token);
-  window.location.replace("/");
+    
+  window.history.pushState({}, "", "/account");
+window.dispatchEvent(new PopStateEvent("popstate"));
 }
-
 
         } else {
             //  Mauvais identifiants

@@ -3,6 +3,11 @@ import { API_URL } from "./config.js";
 
 console.log("profil.js chargé");
 
+//  Afficher ou masquer les boutons selon le rôle
+document.addEventListener("DOMContentLoaded", () => {
+  showAndHideElementsForRoles();
+});
+
 setTimeout(() => {
   const pseudoEl = document.getElementById("pseudo-info");
   const prenomEl = document.getElementById("prenom-info");
@@ -76,6 +81,5 @@ if (noteMoyenneEl) {
 }, 
 
 300);
-
 
  
