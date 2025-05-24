@@ -79,7 +79,7 @@ localStorage.setItem("user_role", mainRole);
     }
 }
 //Accéder ensuite à une route sécurisée avec le token
-fetch(${API_URL}/api/account/me, {
+fetch(`${API_URL}/api/account/me`, {
   method: "GET",
   headers: {
       "Content-Type": "application/json",
@@ -95,13 +95,13 @@ fetch(${API_URL}/api/account/me, {
 const userToken = getToken();
 
 if (userToken) {
-    fetch( ${API_URL}/api/account/me, {
+    fetch(`${API_URL}/api/account/me` , {
         headers: {
             "X-AUTH-TOKEN": userToken
         }
     })
     .then(res => res.json())
     .then(user => {
-        document.querySelector("#welcome").textContent = Bienvenue, ${user.pseudo};
+        document.querySelector("#welcome").textContent = Bienvenue,`${user.pseudo}` ;
     });
 } 
