@@ -1,5 +1,21 @@
+<<<<<<< HEAD
  import Route from "./Route.js";
+=======
+
+ // Ne forcer la déconnexion qu'une seule fois au tout début du site
+//if (!sessionStorage.getItem("hasForcedLogout")) {
+//  localStorage.removeItem("api_token");
+ // localStorage.removeItem("admin_token");
+ // localStorage.removeItem("user_role");
+ // sessionStorage.setItem("hasForcedLogout", "true");
+//}
+
+
+import Route from "./Route.js";
+>>>>>>> temp-fix
 import { allRoutes, websiteName } from "./allRoutes.js";
+
+
 
 // Création d'une route pour la page 404 (page introuvable)
 const route404 = new Route("404", "Page introuvable", "/pages/404.html",[]);
@@ -29,26 +45,24 @@ const LoadContentPage = async () => {
   const actualRoute = getRouteByUrl(path);
   // Récupération du contenu HTML de la route
 
-  // Vérifier les droits d'accès à la page
-  const allRolesArray = actualRoute.authorize;
-  if(allRolesArray.length > 0){
-    if(allRolesArray.includes("disconnected")){
-      // Si déjà connecté et essaie d’aller sur signin ou signup => rediriger
-      if(isConnected()){
-        window.location.replace("/");
-      }
-    }
-    else{
-      const roleUser = getRole();
-      if(!allRolesArray.includes(roleUser)){
-        // Ne rediriger que si ce n’est PAS la page d’accueil
-      if (actualRoute.url !== "/") {
-        window.location.replace("/");
-         return;
-      }
-    }
-  }}
+  
+  // Empêche d'accéder à une route protégée sans être connecté
+const allRolesArray = actualRoute.authorize;
+const roleUser = getRole();
 
+if (allRolesArray.length > 0) {
+  if (allRolesArray.includes("disconnected") && isConnected()) {
+    console.log(actualRoute)
+    window.location.replace("/");
+    return;
+  }
+
+  if (!allRolesArray.includes(roleUser)) {
+    // Si la route est protégée par un rôle et que l'utilisateur n'a pas ce rôle
+    window.location.replace("/");
+    return;
+  }
+} 
   const html = await fetch(actualRoute.pathHtml).then((data) => data.text());
   // Ajout du contenu HTML à l'élément avec l'ID "main-page"
   document.getElementById("main-page").innerHTML = html;
@@ -84,6 +98,8 @@ const routeEvent = (event) => {
   LoadContentPage();
 };
 
+
+
 // Gestion de l'événement de retour en arrière dans l'historique du navigateur
 window.onpopstate = LoadContentPage;
 
@@ -98,5 +114,11 @@ window.route = function (e) {
   }
 };
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> temp-fix
 // Chargement du contenu de la page au chargement initial
 LoadContentPage();

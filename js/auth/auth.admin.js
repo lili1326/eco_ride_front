@@ -1,4 +1,6 @@
-// 1. Sauvegarde du token admin
+ // auth.admin.js
+
+ // 1. Sauvegarde du token admin
 export function setAdminToken(token) {
     localStorage.setItem("admin_token", token);
 }

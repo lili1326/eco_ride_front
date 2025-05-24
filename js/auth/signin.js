@@ -1,8 +1,7 @@
 import { setToken, getToken } from "./auth.js"; 
 import { setAdminToken } from "./auth.admin.js";
 import { API_URL } from "../config.js";
-
-const pseudoInput = document.getElementById("PseudoInput");
+ const pseudoInput = document.getElementById("PseudoInput");
 const mailInput =document.getElementById("EmailInput");
 const passwordInput = document.getElementById("PasswordInput");
 const btnSingin = document.getElementById("btnSignin");
@@ -96,13 +95,13 @@ fetch(`${API_URL}/api/account/me`, {
 const userToken = getToken();
 
 if (userToken) {
-    fetch( `${API_URL}/api/account/me`, {
+    fetch(`${API_URL}/api/account/me` , {
         headers: {
             "X-AUTH-TOKEN": userToken
         }
     })
     .then(res => res.json())
     .then(user => {
-        document.querySelector("#welcome").textContent = `Bienvenue, ${user.pseudo}`;
+        document.querySelector("#welcome").textContent = Bienvenue,`${user.pseudo}` ;
     });
 } 
