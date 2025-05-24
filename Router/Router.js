@@ -48,7 +48,7 @@ const roleUser = getRole();
 
 if (allRolesArray.length > 0) {
   if (allRolesArray.includes("disconnected") && isConnected()) {
-    console.log(actualRoute)
+     
     window.location.replace("/");
     return;
   }
