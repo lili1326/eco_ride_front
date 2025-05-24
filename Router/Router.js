@@ -1,6 +1,3 @@
-<<<<<<< HEAD
- import Route from "./Route.js";
-=======
 
  // Ne forcer la déconnexion qu'une seule fois au tout début du site
 //if (!sessionStorage.getItem("hasForcedLogout")) {
@@ -12,7 +9,6 @@
 
 
 import Route from "./Route.js";
->>>>>>> temp-fix
 import { allRoutes, websiteName } from "./allRoutes.js";
 
 
@@ -114,11 +110,8 @@ window.route = function (e) {
   }
 };
 
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> temp-fix
 // Chargement du contenu de la page au chargement initial
 LoadContentPage();
