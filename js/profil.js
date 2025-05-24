@@ -1,5 +1,6 @@
 import { getToken } from "./auth/auth.js";
 import { API_URL } from "./config.js";
+ 
 
 console.log("profil.js chargé");
 
@@ -9,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 setTimeout(() => {
+
+
   const pseudoEl = document.getElementById("pseudo-info");
   const prenomEl = document.getElementById("prenom-info");
   const welcome = document.getElementById("welcome-message");
@@ -82,4 +85,11 @@ if (noteMoyenneEl) {
 
 300);
 
- 
+ setTimeout(() => {
+  document.querySelectorAll('a[data-url], button[data-url]').forEach(el => {
+    el.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.route(e);
+    });
+  });
+}, 300);
