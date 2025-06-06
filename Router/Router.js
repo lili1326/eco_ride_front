@@ -68,6 +68,7 @@ const roleUser = getRole();
 
   // Ajout du contenu JavaScript
   if (actualRoute.pathJS != "") {
+    
     // Création d'une balise script
     let scriptTag = document.createElement("script");
     scriptTag.setAttribute("type", "module"); // obligatoire pour utiliser import/export

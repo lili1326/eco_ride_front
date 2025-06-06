@@ -1,30 +1,44 @@
-  
  import { getAdminToken } from '../auth/auth.admin.js';
 import { API_URL } from "../config.js";
 
-// Vérifie la connexion admin avant d’exécuter
-document.addEventListener("DOMContentLoaded", () => {
-  const token = getAdminToken();
+console.log("Dashboard script chargé");
 
-  if (!token) {
-    alert("Vous n'êtes pas connecté en tant qu'administrateur.");
-    window.location.href = "/signin";
-    return; // Ne continue pas le chargement
+const token = getAdminToken();
+if (!token) {
+  alert("Vous n'êtes pas connecté en tant qu'administrateur.");
+  window.location.href = "/signin";
+}
+
+// Fonction d’attente : vérifie toutes les 200ms que les balises <canvas> sont là
+const waitUntilCanvasIsReady = () => {
+  const ridesCanvas = document.getElementById('ridesChart');
+  const creditsCanvas = document.getElementById('creditsChart');
+  const totalCreditsText = document.getElementById('totalCredits');
+
+  if (ridesCanvas && creditsCanvas && totalCreditsText) {
+    console.log("✅ Canvas détectés. Lancement des graphiques.");
+    loadRidesChart(token);
+    loadCreditsChart(token);
+  } else {
+    console.log("⏳ En attente des éléments du DOM...");
+    setTimeout(waitUntilCanvasIsReady, 200);
   }
+};
 
-  loadRidesChart(token);
-  loadCreditsChart(token);
-});
+waitUntilCanvasIsReady();
 
 async function loadRidesChart(token) {
+  console.log("📡 Requête GET : Rides");
+
   try {
-    const response = await fetch(`${API_URL}/api/admin/dashboard/rides-per-day`, {
+    const response = await fetch(`${API_URL}/api/admin/dashboard/rides-stats`, {
       headers: { 'X-AUTH-TOKEN': token }
     });
     const data = await response.json();
+    console.log("📊 Données trajets :", data);
 
     const labels = data.map(d => d.jour);
-    const values = data.map(d => d.total);
+    const values = data.map(d => d.nb);
 
     new Chart(document.getElementById('ridesChart'), {
       type: 'line',
@@ -45,19 +59,22 @@ async function loadRidesChart(token) {
       }
     });
   } catch (e) {
-    console.error("Erreur chargement rides :", e);
+    console.error("❌ Erreur chargement rides :", e);
   }
 }
 
 async function loadCreditsChart(token) {
+  console.log("📡 Requête GET : Credits");
+
   try {
     const response = await fetch(`${API_URL}/api/admin/dashboard/credits-per-day`, {
       headers: { 'X-AUTH-TOKEN': token }
     });
-    const text = await response.text();
-    console.log("Réponse brute :", text);
 
+    const text = await response.text();
+    console.log("📥 Réponse brute :", text);
     const data = JSON.parse(text);
+
     const labels = data.map(d => d.jour);
     const values = data.map(d => Number(d.credits));
     const total = values.reduce((sum, val) => sum + val, 0);
@@ -82,6 +99,6 @@ async function loadCreditsChart(token) {
       }
     });
   } catch (e) {
-    console.error("Erreur JSON ou graphique :", e);
+    console.error("❌ Erreur chargement crédits :", e);
   }
 }
