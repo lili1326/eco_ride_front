@@ -115,7 +115,9 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
         card.innerHTML = `
           <div class="profile">
             <h3>${ride.conducteur?.pseudo || "Conducteur"}</h3>
-            <p class="note-conducteur">Note conducteur : chargement...</p>
+            <p class="note-conducteur">Note conducteur : ${
+                 localStorage.getItem("note_moyenne_conducteur") || "Non noté"
+}           </p>
             <img src="/assets/images/avatar.png" width="70px" alt="Avatar">
           </div>
           <p>${ride.lieu_depart} → ${ride.lieu_arrivee}</p>
@@ -123,10 +125,11 @@ document.getElementById("btn-recherche").addEventListener("click", async () => {
           <p>Prix: ${ride.prix_personne} €</p>
           <p>Date: ${dateStr}</p>
           <p>Horaire: ${heureDep} / ${heureArr}</p>
-          <p>Véhicule ${ride.energie}</p>
+          <p>Véhicule ${ride.voiture.energie}</p>
            <button class="btn-details" data-id="${ride.id}">Voir les détails</button>
         `;
         list.appendChild(card);
+        
       });
  
 

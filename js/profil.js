@@ -36,6 +36,8 @@ setTimeout(() => {
     .then(res => res.json())
     .then(user => {
       const noteMoyenneEl = document.getElementById("note-moyenne");
+        
+
 if (noteMoyenneEl) {
   fetch(` ${API_URL}/api/review/conducteur/${user.id}/moyenne`, {
     headers: {
@@ -49,11 +51,15 @@ if (noteMoyenneEl) {
     .then(data => {
       const note = data.note_moyenne !== null ? data.note_moyenne.toFixed(1) : "Non noté";
       noteMoyenneEl.textContent = `Note moyenne conducteur : ${note}`;
+      //  Enregistrer dans localStorage pour la page covoiturage
+localStorage.setItem("note_moyenne_conducteur", note);  
     })
     .catch(err => {
       console.error("Erreur lors de la récupération de la note moyenne :", err);
       noteMoyenneEl.textContent = "Note moyenne : indisponible";
     });
+
+
 }
       console.log("🔍 Utilisateur reçu :", user);
       prenomEl.textContent = user.firstName || "inconnu";
