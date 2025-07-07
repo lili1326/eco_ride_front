@@ -45,20 +45,18 @@ const loginUrl = role === 'admin'
          setToken(token);
         
 // Extraire un rôle utile (ex: client, admin)
-         let mainRole = roles.find(r => r !== 'ROLE_USER') || 'client'; // fallback client
+         let mainRole = roles.find(r => r !== 'ROLE_USER') || 'client';  
 
          mainRole = mainRole.replace('ROLE_', '').toLowerCase();
         
 //stocke le rôle dans localStorage
         localStorage.setItem("user_role", mainRole);
  
-
  //  Stocker le rôle en cookie
-
          setCookie(RoleCookieName, mainRole.toLowerCase(), 7);
          showAndHideElementsForRoles();
-         console.log("🎫 token =", token);
-console.log("👤 role =", mainRole);
+         console.log(" token =", token);
+console.log(" role =", mainRole);
             
    if (mainRole === "admin") {
   setAdminToken(token);        //  stocke sous admin_token

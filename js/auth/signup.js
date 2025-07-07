@@ -11,7 +11,7 @@ const inputValidationPassword = document.getElementById("ValidatePasswordInput")
 const btnValidation =document.getElementById("btn-validation-inscription");
 
 
-inputPseudo.addEventListener("keyup", validateForm); //validate Form =fonction
+inputPseudo.addEventListener("keyup", validateForm);  
 inputPreNom.addEventListener("keyup", validateForm);
 inputMail.addEventListener("keyup", validateForm);
 inputPassword.addEventListener("keyup", validateForm);
@@ -19,7 +19,7 @@ inputValidationPassword.addEventListener("keyup", validateForm);
 
 //Function permettant de valider tout le formulaire
 function validateForm(){
-    const pseudoOk=validateRequired(inputPseudo);// fonction validateRequired
+    const pseudoOk=validateRequired(inputPseudo); 
     const nomOk = validateRequired(inputNom);
     const prenomOk=validateRequired(inputPreNom);
     const mailOk=validateMail(inputMail);

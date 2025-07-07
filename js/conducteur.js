@@ -1,7 +1,7 @@
 import { getToken } from "./auth/auth.js";
 import { API_URL } from "./config.js";
 
-console.log("Script conducteur.js chargé");
+//console.log("Script conducteur.js chargé");
 
 //  pour récupérer le token depuis localStorage
  
@@ -45,7 +45,7 @@ if (selectVoiture) {
       return;
     }
    
-    console.log(" Soumission interceptée");
+    //console.log(" Soumission interceptée");
 
     const horaire = form.horaire.value.trim(); // exemple : "08h00/09h00"
     let departTime = "", arriveeTime = "";
@@ -70,7 +70,7 @@ if (selectVoiture) {
       voiture: form.voiture.value 
     };
 
-    console.log("📦 Données à envoyer :", data);
+    //console.log(" Données à envoyer :", data);
 
     try {
       const response = await fetch(`${API_URL}/api/ride`, {
@@ -115,7 +115,7 @@ recap.innerHTML = `
     <li><strong>Date :</strong> ${dateFormatee}</li>
     <li><strong>Places disponibles :</strong> ${ride.nb_place}</li>
     <li><strong>Prix / personne :</strong> ${ride.prix_personne} €</li>
-    <li><strong>Énergie :</strong> ${ride.energie}</li>
+    <li><strong>Énergie :</strong> ${ride.voiture.energie}</li>
   </ul>
 `;
      
@@ -232,7 +232,7 @@ function changerStatut(rideId, statut) {
       let html = `
         <p><strong>${ride.lieu_depart}</strong> → <strong>${ride.lieu_arrivee}</strong></p>
         <p>${dateFormatee} — ${heureDep} à ${heureArr}</p>
-        <p>${ride.nb_place} places – ${ride.prix_personne} € – ${ride.energie}</p>
+        <p>${ride.nb_place} places – ${ride.prix_personne} € – ${ride.voiture.energie}</p>
         <p><strong>Statut :</strong> ${statut}</p>
       `;
 
