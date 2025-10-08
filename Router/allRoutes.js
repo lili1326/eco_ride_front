@@ -15,6 +15,7 @@ export const allRoutes = [
     new Route("/admin-dashboard", "Tableau de bord Admin", "/pages/admin/dashboard.html", ["admin"], "/js/admin/dashboard.js"),
     new Route("/mentions-legales", "Mentions légales", "/pages/mentions-legales.html", []),
     new Route("/contact", "Contact", "/pages/contact.html", []),
+    new Route("/modif-profil", "Modifier mon profil", "/pages/auth/modifProfil.html", ["client"], "/js/auth/modifProfil.js"),
     new Route("/404", " 404", "/pages/404.html",[],"/js/404.js")
 ];
 

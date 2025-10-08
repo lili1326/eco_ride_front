@@ -1,4 +1,4 @@
-console.log("✅ home.js chargé");
+//console.log("✅ home.js chargé");
 
 const btn = document.getElementById("btn-home-search");
 if (!btn) {

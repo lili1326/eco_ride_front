@@ -38,19 +38,23 @@ const loginUrl = role === 'admin'
 
         if (response.ok) {
 // Connexion réussie
+// Récupération du token
           const token = result.token ?? result.apiToken;
+
+   // Récupération des rôles associés à l’utilisateur connecté
           const roles = result.roles;
 
-//  Stocker le token avec ta fonction centralisée
+ // Stocke le token dans le localStorage via la fonction centralisée (auth.js)
          setToken(token);
         
 // Extraire un rôle utile (ex: client, admin)
-         let mainRole = roles.find(r => r !== 'ROLE_USER') || 'client';  
+     let mainRole = roles.find(r => r !== 'ROLE_USER') || 'client';  
 
-         mainRole = mainRole.replace('ROLE_', '').toLowerCase();
+// On nettoie le nom du rôle pour le rendre exploitable (ex : "ROLE_ADMIN" → "admin")
+      mainRole = mainRole.replace('ROLE_', '').toLowerCase();
         
 //stocke le rôle dans localStorage
-        localStorage.setItem("user_role", mainRole);
+    localStorage.setItem("user_role", mainRole);
  
  //  Stocker le rôle en cookie
          setCookie(RoleCookieName, mainRole.toLowerCase(), 7);
@@ -59,15 +63,15 @@ const loginUrl = role === 'admin'
 console.log(" role =", mainRole);
             
    if (mainRole === "admin") {
-  setAdminToken(token);        //  stocke sous admin_token
-    window.history.pushState({}, "", " /admin-dashboard");
-window.dispatchEvent(new PopStateEvent("popstate"));
- // window.location.replace("/admin-dashboard");
+  setAdminToken(token);// on stocke le token dans auth.admin.js
+  window.history.pushState({}, "", " /admin-dashboard");
+  
+// Charge dynamiquement la bonne vue (admin, compte, etc.)
+  window.dispatchEvent(new PopStateEvent("popstate"));
 } else {
-  setToken(token);
-    
+  setToken(token);// on stocke le token dans auth.js
   window.history.pushState({}, "", "/account");
-window.dispatchEvent(new PopStateEvent("popstate"));
+  window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
         } else {

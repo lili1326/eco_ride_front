@@ -28,7 +28,7 @@ function validateForm(){
 
     //si les champs ne sont pas valides le btn incription n est pas clikable
     if (pseudoOk && prenomOk && nomOk && mailOk && passwordOk && passwordConfirmOk) {
-        btnValidation.disabled =false;
+        btnValidation.disabled = false;
     }else{
         btnValidation.disabled = true;
     }

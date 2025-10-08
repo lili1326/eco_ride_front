@@ -12,7 +12,7 @@ export function setToken(token) {
  
 // 3. Déconnexion : suppression du token
   export function logout() {
-    localStorage.removeItem("api_token");
-    document.cookie = "user_role=; Max-Age=0";
-    window.location.href = "/signin";
+    localStorage.removeItem("api_token");// Supprime le token
+    document.cookie = "user_role=; Max-Age=0";// Supprime le rôle stocké en cookie
+    window.location.href = "/signin";// Redirige vers la page de connexion
   }

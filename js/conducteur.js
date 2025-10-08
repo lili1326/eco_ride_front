@@ -34,7 +34,7 @@ if (selectVoiture) {
     return;
   }
 
-  console.log(" Formulaire détecté");
+  //console.log(" Formulaire détecté");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();

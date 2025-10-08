@@ -61,7 +61,7 @@ localStorage.setItem("note_moyenne_conducteur", note);
 
 
 }
-      console.log("🔍 Utilisateur reçu :", user);
+      //console.log("🔍 Utilisateur reçu :", user);
       prenomEl.textContent = user.firstName || "inconnu";
       pseudoEl.textContent = user.pseudo || "inconnu";
       welcome.textContent = `Bonjour ${user.firstName}, bienvenue sur votre page personnelle !`;

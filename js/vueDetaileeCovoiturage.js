@@ -95,6 +95,7 @@ window.dispatchEvent(new PopStateEvent("popstate"));;
 
 document.getElementById("car-marque").textContent = ride.voiture?.marque || "Inconnue";
 document.getElementById("car-modele").textContent = ride.voiture?.modele || "Inconnu";
+document.getElementById("car-couleur").textContent = ride.voiture?.couleur || "Inconnue";
 document.getElementById("car-energie").textContent = ride.voiture?.energie || "Inconnue";
 
 //  PRÉFÉRENCES CONDUCTEUR
